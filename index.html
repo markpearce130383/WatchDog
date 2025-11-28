@@ -105,7 +105,7 @@
             <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                 <div>
                   <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Target Address</label>
-                  <input type="text" name="address" required placeholder="e.g. Windsor castle, Windsor, Berkshire"
+                  <input type="text" name="address" required placeholder="e.g. Stones Farm, High Street, Oxford"
                          class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-slate-700 dark:text-white">
                 </div>
                 <div>
@@ -550,10 +550,15 @@
     const WEBHOOK_URL = "YOUR_N8N_WEBHOOK_URL"; 
     // ---------------------
 
+    // --- HELPER: GENERATE UNIQUE ID ---
+    function generateURN() {
+        const timestamp = Date.now().toString().slice(-6);
+        const random = Math.random().toString(36).substring(2, 6).toUpperCase();
+        return `RCT-${timestamp}-${random}`;
+    }
+
     // --- DARK MODE LOGIC ---
     const themeToggle = document.getElementById('theme-toggle');
-    
-    // Check local storage or system preference
     if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
     } else {
@@ -603,62 +608,50 @@
     // --- SUBMIT LOGIC ---
     document.getElementById('riskForm').addEventListener('submit', async (e) => {
       e.preventDefault();
+      
+      // 1. Generate ID
+      const reportURN = generateURN();
+      
+      // Update Loading UI
+      document.querySelector('#view-loading h2').innerText = `Processing Report #${reportURN}`;
       switchView('loading');
 
       const formData = new FormData(e.target);
       
-      // 1. Collect Perimeter Features
-      const perimeterFeatures = Array.from(document.querySelectorAll('input[name="perimeter_feature"]:checked'))
-        .map(cb => cb.value);
-      const accessPoints = document.getElementById('accessPoints').value;
+      // 2. Data Collection Helpers
+      const getChecks = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(cb => cb.value);
+      const getVal = (id) => document.getElementById(id).value;
+
+      // 3. Construct Data Blocks
+      const perimeterFeatures = getChecks('perimeter_feature');
+      const accessPoints = getVal('accessPoints');
       if (accessPoints) perimeterFeatures.push(`Access Points: ${accessPoints}`);
 
-      // 2. Collect Tech Opportunities
-      const techOpps = Array.from(document.querySelectorAll('input[name="tech_opp"]:checked'))
-        .map(cb => cb.value);
+      const techOpps = getChecks('tech_opp');
+      const vulnerabilities = getChecks('vulnerability');
+      const buildingFeatures = getChecks('building_feature');
+      const internalFeatures = getChecks('internal_feature');
 
-      // 3. Collect Vulnerabilities
-      const vulnerabilities = Array.from(document.querySelectorAll('input[name="vulnerability"]:checked'))
-        .map(cb => cb.value);
+      const buildingScores = `Door Locks: ${getVal('doorScore')}/5, Wall Construction: ${getVal('wallScore')}/5, Glazing: ${getVal('glazingScore')}/5`;
+      const internalScores = `False Alarm Rate: ${getVal('falseAlarmRate')}, People knowing code: ${getVal('peopleKnowingCode')}`;
 
-      // 4. Collect Main Building Features
-      const buildingFeatures = Array.from(document.querySelectorAll('input[name="building_feature"]:checked'))
-        .map(cb => cb.value);
-      
-      const doorScore = document.getElementById('doorScore').value;
-      const wallScore = document.getElementById('wallScore').value;
-      const glazingScore = document.getElementById('glazingScore').value;
-      
-      const buildingScores = `Door Locks: ${doorScore}/5, Wall Construction: ${wallScore}/5, Glazing: ${glazingScore}/5`;
-
-      // 5. Collect Internal Security
-      const internalFeatures = Array.from(document.querySelectorAll('input[name="internal_feature"]:checked'))
-        .map(cb => cb.value);
-      
-      const falseAlarms = document.getElementById('falseAlarmRate').value;
-      const peopleKnowingCode = document.getElementById('peopleKnowingCode').value;
-      
-      const internalScores = `False Alarm Rate: ${falseAlarms}, People knowing code: ${peopleKnowingCode}`;
-
-      // 6. Collect Operational/Environment (New Section)
+      // Collect Operational/Environment
       const opSec = `
-        Code Changes: ${document.getElementById('codeFreq').value}
-        Monitoring: ${document.getElementById('monitoringSetup').value}
-        Lockdown: ${document.getElementById('lockdownProc').value}
-        Open Windows: ${document.getElementById('openWindowProc').value}
-        Drones: ${document.getElementById('droneVuln').value}
-        Public Rights of Way: ${document.getElementById('publicRights').value}
-        Insider Threat: ${document.getElementById('insiderThreat').value}
-        Evac/Invac: ${document.getElementById('invacEvac').value}
-        Neighbourhood Watch: ${document.getElementById('neighbourScheme').value}
-        Assets/Trackers: ${document.getElementById('assetTrackers').value}
+        Code Changes: ${getVal('codeFreq')}
+        Monitoring: ${getVal('monitoringSetup')}
+        Lockdown: ${getVal('lockdownProc')}
+        Open Windows: ${getVal('openWindowProc')}
+        Drones: ${getVal('droneVuln')}
+        Public Rights of Way: ${getVal('publicRights')}
+        Insider Threat: ${getVal('insiderThreat')}
+        Evac/Invac: ${getVal('invacEvac')}
+        Neighbourhood Watch: ${getVal('neighbourScheme')}
+        Assets/Trackers: ${getVal('assetTrackers')}
       `;
 
-      // 7. Notes
-      const securityNotes = formData.get('securityNotes').trim();
-
-      // Combine into one readable block for the AI Agent
+      // 4. Summarize for AI
       const existingMeasuresSummary = `
+        REPORT REFERENCE: ${reportURN}
         OUTER PERIMETER: ${perimeterFeatures.join(', ') || 'None selected'}
         INTERNAL/TECH OPPORTUNITIES: ${techOpps.join(', ') || 'None selected'}
         VULNERABILITIES IDENTIFIED: ${vulnerabilities.join(', ') || 'None selected'}
@@ -671,11 +664,12 @@
 
         OPERATIONAL & ENVIRONMENT: ${opSec}
 
-        NOTES: ${securityNotes}
+        NOTES: ${formData.get('securityNotes').trim()}
       `;
 
-      // Payload for n8n
+      // 5. Payload for n8n
       const payload = {
+        unique_id: reportURN, // Send ID to n8n
         address: formData.get('address'),
         email: formData.get('clientEmail'),
         details: formData.get('propertyDetails'),
@@ -691,8 +685,17 @@
 
         if (res.ok) {
           const result = await res.json();
-          const htmlContent = result.html || result.output || "<p>Report generated successfully and sent to email.</p>";
-          document.getElementById('report-content').innerHTML = htmlContent;
+          const htmlContent = result.html || result.output || "<p>Report generated successfully.</p>";
+          
+          // Inject Reference ID Header into the Result View
+          const headerHTML = `
+            <div class="mb-6 border-b border-slate-200 dark:border-slate-700 pb-4">
+                <span class="text-xs font-bold bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 px-2 py-1 rounded">REF: ${reportURN}</span>
+                <span class="text-xs text-slate-400 ml-2">${new Date().toLocaleDateString()}</span>
+            </div>
+          `;
+          
+          document.getElementById('report-content').innerHTML = headerHTML + htmlContent;
           switchView('result');
         } else {
           alert("Error generating report. Please check the server.");
