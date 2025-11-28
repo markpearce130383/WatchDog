@@ -1,0 +1,354 @@
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Residential Crime Tracker</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class', // Enable manual dark mode toggle
+    }
+  </script>
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.4s ease-out forwards;
+    }
+    @keyframes progress {
+      0% { width: 0% }
+      100% { width: 100% }
+    }
+    .animate-progress {
+      animation: progress 45s ease-out forwards;
+    }
+    /* Mobile table scroll fix */
+    #report-content table {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      -webkit-overflow-scrolling: touch;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+    }
+    /* Dark mode table fixes */
+    .dark #report-content table {
+      color: #e2e8f0;
+    }
+    .dark #report-content th {
+      background-color: #1e293b;
+      color: #f1f5f9;
+    }
+    .dark #report-content td {
+      border-color: #334155;
+    }
+    
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; color: black !important; }
+      .shadow-2xl { box-shadow: none !important; }
+      #report-content { padding: 0 !important; border: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 min-h-screen font-sans text-slate-800 dark:text-slate-200 transition-colors duration-300">
+
+  <button id="theme-toggle" class="fixed top-4 right-4 z-[10000] p-2 rounded-full bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 shadow-lg hover:scale-110 transition-transform border border-slate-200 dark:border-slate-700">
+    <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+    <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+  </button>
+
+  <div id="login-screen" class="fixed inset-0 z-[9999] bg-slate-100 dark:bg-slate-950 flex flex-col items-center justify-center p-4 transition-colors duration-300">
+    <div class="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-2xl w-full max-w-sm text-center border border-slate-200 dark:border-slate-700">
+      <i data-lucide="shield-alert" class="w-12 h-12 mx-auto text-slate-400 mb-4"></i>
+      <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Analyst Access</h3>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Enter access code to proceed.</p>
+      <form id="loginForm" class="space-y-4">
+        <input type="password" id="passwordInput" placeholder="Enter Password" 
+               class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg text-center focus:ring-2 focus:ring-emerald-500 outline-none transition bg-white dark:bg-slate-700 dark:text-white dark:placeholder-slate-400">
+        <button type="submit" 
+                class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-lg transition">
+          Unlock System
+        </button>
+      </form>
+      <p id="loginError" class="text-red-500 text-sm mt-4 font-medium hidden"></p>
+    </div>
+  </div>
+
+  <div id="main-app" class="hidden p-4 md:p-8">
+    
+    <div id="view-form" class="max-w-3xl mx-auto animate-fadeIn">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700 transition-colors duration-300">
+        <div class="bg-slate-900 dark:bg-black p-6 text-white">
+          <div class="flex items-center gap-3 mb-2">
+            <i data-lucide="map-pin" class="w-8 h-8 text-emerald-400"></i>
+            <h1 class="text-2xl font-bold">Residential Crime Tracker</h1>
+          </div>
+          <p class="text-slate-400">Generate AI-driven Threat Matrix & Vulnerability Assessments.</p>
+        </div>
+
+        <form id="riskForm" class="p-6 space-y-8">
+          
+          <section>
+            <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider mb-4 flex items-center gap-2">
+              <i data-lucide="home" class="w-4 h-4"></i> Property & Client
+            </h3>
+            
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Target Address</label>
+                  <input type="text" name="address" required placeholder="e.g. Stones Farm, High Street, Oxford"
+                         class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-slate-700 dark:text-white">
+                </div>
+                <div>
+                  <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Client Email (For Report)</label>
+                  <input type="email" name="clientEmail" required placeholder="client@example.com"
+                         class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-slate-700 dark:text-white">
+                </div>
+            </div>
+          </section>
+
+          <section>
+            <div class="flex justify-between items-center mb-2">
+              <h3 class="text-sm font-bold text-slate-400 uppercase tracking-wider flex items-center gap-2">
+                <i data-lucide="file-search" class="w-4 h-4"></i> Property Context
+              </h3>
+            </div>
+            <div class="bg-slate-50 dark:bg-slate-900/50 p-4 rounded-lg border border-slate-200 dark:border-slate-700">
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Overview of Style & Occupancy
+                </label>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">
+                    Describe boundaries, occupancy (weekend/family), foot traffic, on-site staff, and age of property.
+                </p>
+                <textarea name="propertyDetails" rows="4" required 
+                    class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-slate-800 dark:text-white resize-y"
+                    placeholder="e.g. Weekend retreat with heavy foot traffic. Grade II listed building. 3 on-site staff..."></textarea>
+            </div>
+          </section>
+
+          <section>
+            <details class="group bg-slate-50 dark:bg-slate-800/50 rounded-lg transition-all duration-300">
+                <summary class="flex items-center gap-2 cursor-pointer font-bold text-slate-500 hover:text-emerald-500 dark:text-slate-400 dark:hover:text-emerald-400 uppercase tracking-wider text-sm select-none p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50">
+                    <i data-lucide="lock" class="w-4 h-4"></i>
+                    <span>Existing Physical Measures (Optional)</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 ml-auto transition-transform duration-300 group-open:rotate-180"></i>
+                </summary>
+                
+                <div class="p-4 pt-0 animate-fadeIn mt-2">
+                    <p class="text-xs text-slate-400 dark:text-slate-500 mb-3">
+                        Listing existing measures helps the AI generate a gap analysis.
+                    </p>
+                    
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mb-4">
+                        <label class="flex items-center gap-3 p-3 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-slate-700 transition">
+                            <input type="checkbox" name="measures" value="CCTV System" class="w-4 h-4 text-emerald-500 border-gray-300 rounded focus:ring-emerald-500">
+                            <span class="text-sm font-medium text-slate-700 dark:text-slate-300">CCTV System</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-slate-700 transition">
+                            <input type="checkbox" name="measures" value="Perimeter Fencing/Gates" class="w-4 h-4 text-emerald-500 border-gray-300 rounded focus:ring-emerald-500">
+                            <span class="text-sm font-medium text-slate-700 dark:text-slate-300">Perimeter Fencing/Gates</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-slate-700 transition">
+                            <input type="checkbox" name="measures" value="Intruder Alarm" class="w-4 h-4 text-emerald-500 border-gray-300 rounded focus:ring-emerald-500">
+                            <span class="text-sm font-medium text-slate-700 dark:text-slate-300">Intruder Alarm</span>
+                        </label>
+                        <label class="flex items-center gap-3 p-3 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:bg-white dark:hover:bg-slate-700 transition">
+                            <input type="checkbox" name="measures" value="Guard Dogs" class="w-4 h-4 text-emerald-500 border-gray-300 rounded focus:ring-emerald-500">
+                            <span class="text-sm font-medium text-slate-700 dark:text-slate-300">Guard Dogs</span>
+                        </label>
+                    </div>
+
+                    <div>
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                            Additional Security Notes
+                        </label>
+                        <textarea name="securityNotes" rows="2" placeholder="e.g. CCTV has sun-glare issues in winter. Rear gate lock is broken."
+                            class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-slate-700 dark:text-white resize-none"></textarea>
+                    </div>
+                </div>
+            </details>
+          </section>
+
+          <button type="submit" 
+                  class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 flex justify-center items-center gap-2">
+            <i data-lucide="radar" class="w-5 h-5"></i> Execute Threat Analysis
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div id="view-loading" class="hidden flex flex-col items-center justify-center min-h-[60vh] text-center p-8 animate-fadeIn">
+      <div class="relative mb-8">
+        <div class="absolute inset-0 bg-emerald-200 rounded-full blur-xl opacity-50 animate-pulse"></div>
+        <i data-lucide="scan-search" class="w-16 h-16 text-emerald-600 animate-spin relative z-10"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-2">Scanning Intelligence Sources</h2>
+      <p class="text-slate-500 dark:text-slate-400 max-w-md">
+        Analysing crime statistics, social media reports, and calculating Threat Matrix Score...<br>
+        <span class="text-xs mt-2 block">(This usually takes 30-60 seconds)</span>
+      </p>
+      <div class="mt-8 flex flex-col gap-2 w-64">
+        <div class="h-1 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+          <div class="h-full bg-emerald-500 animate-progress"></div>
+        </div>
+        <div class="flex justify-between text-xs text-slate-400">
+            <span>Gathering Data</span>
+            <span>Generating Report</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="view-result" class="hidden max-w-4xl mx-auto animate-fadeIn">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl overflow-hidden">
+        <div class="bg-emerald-600 p-4 flex justify-between items-center text-white sticky top-0 z-50 shadow-md no-print">
+          <div class="flex items-center gap-2">
+            <i data-lucide="check-circle" class="w-6 h-6 text-emerald-200"></i>
+            <span class="font-bold">Assessment Complete</span>
+          </div>
+          <div class="flex gap-3">
+             <button onclick="window.print()"
+                   class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
+              <i data-lucide="printer" class="w-4 h-4"></i> Save PDF
+            </button>
+            <button onclick="resetApp()"
+                    class="bg-white text-emerald-700 hover:bg-emerald-50 px-4 py-2 rounded-lg text-sm font-medium transition">
+              New Scan
+            </button>
+          </div>
+        </div>
+        
+        <div class="p-8 md:p-12 bg-slate-50 dark:bg-slate-900 min-h-screen">
+           <div id="report-content" class="prose prose-slate dark:prose-invert max-w-none bg-white dark:bg-slate-800 p-4 md:p-10 shadow-sm border border-slate-200 dark:border-slate-700 rounded-lg"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
+    // --- CONFIGURATION ---
+    const APP_PASSWORD = "SecureHome"; // <--- CHANGE THIS IF NEEDED
+    // REPLACE THIS WITH YOUR ACTUAL N8N WEBHOOK URL
+    const WEBHOOK_URL = "YOUR_N8N_WEBHOOK_URL"; 
+    // ---------------------
+
+    // --- DARK MODE LOGIC ---
+    const themeToggle = document.getElementById('theme-toggle');
+    
+    // Check local storage or system preference
+    if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+    } else {
+      document.documentElement.classList.remove('dark');
+    }
+
+    themeToggle.addEventListener('click', () => {
+      if (document.documentElement.classList.contains('dark')) {
+        document.documentElement.classList.remove('dark');
+        localStorage.setItem('color-theme', 'light');
+      } else {
+        document.documentElement.classList.add('dark');
+        localStorage.setItem('color-theme', 'dark');
+      }
+      lucide.createIcons(); 
+    });
+
+    // --- DOM ELEMENTS ---
+    const loginScreen = document.getElementById('login-screen');
+    const mainApp = document.getElementById('main-app');
+    const views = {
+      form: document.getElementById('view-form'),
+      loading: document.getElementById('view-loading'),
+      result: document.getElementById('view-result')
+    };
+
+    // --- INIT & LOGIN ---
+    if (sessionStorage.getItem('isLoggedIn') === 'true') showApp();
+
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      if (document.getElementById('passwordInput').value === APP_PASSWORD) {
+        sessionStorage.setItem('isLoggedIn', 'true');
+        showApp();
+      } else {
+        document.getElementById('loginError').textContent = "Access Denied: Incorrect Code.";
+        document.getElementById('loginError').classList.remove('hidden');
+      }
+    });
+
+    function showApp() {
+      loginScreen.style.display = 'none';
+      mainApp.style.display = 'block';
+      lucide.createIcons();
+    }
+
+    // --- SUBMIT LOGIC ---
+    document.getElementById('riskForm').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      switchView('loading');
+
+      const formData = new FormData(e.target);
+      
+      // Collect Checkboxes
+      const checkedMeasures = document.querySelectorAll('input[name="measures"]:checked');
+      let measuresList = Array.from(checkedMeasures).map(cb => cb.value);
+      
+      const securityNotes = formData.get('securityNotes').trim();
+      if (securityNotes) measuresList.push(`Note: ${securityNotes}`);
+      
+      const measuresString = measuresList.join(', ');
+
+      // Payload for n8n
+      const payload = {
+        address: formData.get('address'),
+        email: formData.get('clientEmail'),
+        details: formData.get('propertyDetails'),
+        existing_measures: measuresString
+      };
+
+      try {
+        const res = await fetch(WEBHOOK_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json' },
+          body: JSON.stringify(payload)
+        });
+
+        if (res.ok) {
+          const result = await res.json();
+          // Expecting { "html": "<h1>Report...</h1>" } or similar from n8n
+          const htmlContent = result.html || result.output || "<p>Report generated successfully and sent to email.</p>";
+          document.getElementById('report-content').innerHTML = htmlContent;
+          switchView('result');
+        } else {
+          alert("Error generating report. Please check the server.");
+          switchView('form');
+        }
+      } catch (err) {
+        console.error(err);
+        alert("Network error. Check console.");
+        switchView('form');
+      }
+    });
+
+    function switchView(viewName) {
+      Object.values(views).forEach(el => el.classList.add('hidden'));
+      views[viewName].classList.remove('hidden');
+      window.scrollTo(0, 0);
+    }
+
+    window.resetApp = () => {
+      document.getElementById('riskForm').reset();
+      document.querySelectorAll('input[name="measures"]').forEach(cb => cb.checked = false);
+      switchView('form');
+    };
+  </script>
+</body>
+</html>
