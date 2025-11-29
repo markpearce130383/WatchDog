@@ -147,7 +147,7 @@
                     
                     <div class="mb-6">
                         <h4 class="text-sm font-bold text-emerald-600 dark:text-emerald-400 mb-3 flex items-center gap-2 border-b border-slate-200 dark:border-slate-700 pb-1">
-                            <i data-lucide="fence" class="w-4 h-4"></i> Outer Perimeter & Boundaries
+                            <i data-lucide="fence" class="w-4 h-4"></i> Physical Security Measures (Perimeter & Tech)
                         </h4>
                         
                          <div class="mb-4">
@@ -161,21 +161,7 @@
                             </select>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="perimeter_grid"></div>
-                    </div>
-
-                    <div class="mb-6">
-                        <h4 class="text-sm font-bold text-emerald-600 dark:text-emerald-400 mb-3 flex items-center gap-2 border-b border-slate-200 dark:border-slate-700 pb-1">
-                            <i data-lucide="scan-eye" class="w-4 h-4"></i> Internal Perimeter & Technology
-                        </h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="tech_grid"></div>
-                    </div>
-
-                    <div class="mb-6">
-                        <h4 class="text-sm font-bold text-emerald-600 dark:text-emerald-400 mb-3 flex items-center gap-2 border-b border-slate-200 dark:border-slate-700 pb-1">
-                            <i data-lucide="unlock" class="w-4 h-4"></i> Vulnerability & Egress
-                        </h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="vuln_grid"></div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="physical_measures_grid"></div>
                     </div>
 
                     <div class="mb-6">
@@ -245,6 +231,13 @@
                         </div>
 
                         <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="internal_grid"></div>
+                    </div>
+
+                    <div class="mb-6">
+                        <h4 class="text-sm font-bold text-red-600 dark:text-red-400 mb-3 flex items-center gap-2 border-b border-red-200 dark:border-red-800 pb-1">
+                            <i data-lucide="alert-triangle" class="w-4 h-4"></i> Identified Vulnerabilities
+                        </h4>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="risk_grid"></div>
                     </div>
 
                     <div class="mb-6">
@@ -412,10 +405,12 @@
         `;
     };
 
-    // --- DATA DEFINITIONS FOR CHECKBOXES ---
-    // UPDATED: Int. Surveillance Positions is now marked as RISK (risk: true)
+    // --- REFACTORED DATA DEFINITIONS (GROUPED BY CATEGORY) ---
+    // Note: I have unified the 'perimeter' and 'tech' non-risks into 'physical_measures'.
+    // All items marked with 'risk: true' are now moved to the 'risks' list.
     const lists = {
-        perimeter: [
+        physical_measures: [
+            // From Perimeter
             {val: "Fencing", lbl: "Fencing Present?"},
             {val: "Hedging (Non-thorny)", lbl: "Hedging (Non-thorny) Present?"},
             {val: "Hedging (Thorny/Defensive)", lbl: "Hedging (Thorny)Present?"},
@@ -423,29 +418,20 @@
             {val: "Gates", lbl: "Gates Installed?"},
             {val: "Secure Postal Delivery System", lbl: "Postal Delivery System Present?"},
             {val: "Deterrence Signage Present", lbl: "Deterrence Signage Present?"},
-            {val: "External Surveillance Positions Possible (Risk)", lbl: "Ext. Surveillance Holes? (Risk)", risk: true},
-        ],
-        tech: [
-            // Updated to be a Risk
-            {val: "Internal Surveillance Positions (Risk)", lbl: "Int. Surveillance Positions (Risk)", risk: true},
+            // From Tech
             {val: "Lighting Opportunities", lbl: "Lighting Opportunities?"},
             {val: "CCTV Opportunities", lbl: "CCTV Opportunities?"},
             {val: "Analytic Opportunities", lbl: "Analytics Opportunities?"},
             {val: "Guard Dog Opportunities", lbl: "Guard Dog Opportunities?"},
             {val: "PIDs Opportunities", lbl: "PID's Opportunities?"},
             {val: "LiDAR Opportunities", lbl: "LiDAR Opportunities?"},
-        ],
-        vuln: [
-            {val: "Accessible Outbuildings/Sheds", lbl: "Accessible Outbuildings?", risk: true},
-            {val: "Keys Hidden Outside", lbl: "Keys Hidden Outside?", risk: true},
+            // From Vuln
             {val: "Egress Preventative Measures", lbl: "Egress Prevention (Bollards etc.) Present?"},
         ],
         building: [
             {val: "Security Film Present", lbl: "Security Film?"},
             {val: "Window Shutters Present", lbl: "Window Shutters?"},
             {val: "Locking Systems Present", lbl: "Locking Systems?"},
-            {val: "Potential for Climbing (Risk)", lbl: "Climbing Potential? (Risk)", risk: true},
-            {val: "Flat Surfaces to Aid Climbing (Risk)", lbl: "Flat Surfaces? (Risk)", risk: true},
             {val: "CCTV Present", lbl: "CCTV Present?"},
             {val: "PIR Lighting Present", lbl: "PIR Lighting?"},
             {val: "Intruder Alarm Beams", lbl: "Intruder Alarm Beams?"},
@@ -469,16 +455,25 @@
             {val: "Smoke Cloaks", lbl: "Smoke Cloaks?"},
             {val: "Strobe Lighting", lbl: "Strobe Lighting?"},
             {val: "High Value Items in Safe", lbl: "Items in Safe?"},
+        ],
+        risks: [
+            // All Red Risks Consolidated Here
+            {val: "External Surveillance Positions Possible (Risk)", lbl: "Ext. Surveillance Holes? (Risk)", risk: true},
+            {val: "Internal Surveillance Positions (Risk)", lbl: "Int. Surveillance Positions (Risk)", risk: true},
+            {val: "Accessible Outbuildings/Sheds", lbl: "Accessible Outbuildings?", risk: true},
+            {val: "Keys Hidden Outside", lbl: "Keys Hidden Outside?", risk: true},
+            {val: "Potential for Climbing (Risk)", lbl: "Climbing Potential? (Risk)", risk: true},
+            {val: "Flat Surfaces to Aid Climbing (Risk)", lbl: "Flat Surfaces? (Risk)", risk: true},
         ]
     };
 
     // --- INJECT CHECKBOXES ON LOAD ---
+    // Updated mapping to new ID targets
     document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('perimeter_grid').innerHTML = lists.perimeter.map(i => renderCheckbox('perimeter_feature', i.val, i.lbl, i.risk)).join('');
-        document.getElementById('tech_grid').innerHTML = lists.tech.map(i => renderCheckbox('tech_opp', i.val, i.lbl, i.risk)).join('');
-        document.getElementById('vuln_grid').innerHTML = lists.vuln.map(i => renderCheckbox('vulnerability', i.val, i.lbl, i.risk)).join('');
+        document.getElementById('physical_measures_grid').innerHTML = lists.physical_measures.map(i => renderCheckbox('physical_feature', i.val, i.lbl, i.risk)).join('');
         document.getElementById('building_grid').innerHTML = lists.building.map(i => renderCheckbox('building_feature', i.val, i.lbl, i.risk)).join('');
         document.getElementById('internal_grid').innerHTML = lists.internal.map(i => renderCheckbox('internal_feature', i.val, i.lbl, i.risk)).join('');
+        document.getElementById('risk_grid').innerHTML = lists.risks.map(i => renderCheckbox('risk_feature', i.val, i.lbl, i.risk)).join('');
         lucide.createIcons();
     });
 
@@ -552,15 +547,15 @@
         });
       };
 
-      // 3. Construct Data Blocks
-      const perimeterFeatures = getEnhancedChecks('perimeter_feature');
+      // 3. Construct Data Blocks (UPDATED NAMES)
+      // I have updated these to grab the new checkbox names defined in the `renderCheckbox` mapping above
+      const physicalFeatures = getEnhancedChecks('physical_feature');
       const accessPoints = getVal('accessPoints');
-      if (accessPoints) perimeterFeatures.push(`Access Points: ${accessPoints}`);
+      if (accessPoints) physicalFeatures.push(`Access Points: ${accessPoints}`);
 
-      const techOpps = getEnhancedChecks('tech_opp');
-      const vulnerabilities = getEnhancedChecks('vulnerability');
       const buildingFeatures = getEnhancedChecks('building_feature');
       const internalFeatures = getEnhancedChecks('internal_feature');
+      const riskFeatures = getEnhancedChecks('risk_feature');
 
       const buildingScores = `Door Locks: ${getVal('doorScore')}/5, Wall Construction: ${getVal('wallScore')}/5, Glazing: ${getVal('glazingScore')}/5`;
       const internalScores = `False Alarm Rate: ${getVal('falseAlarmRate')}, People knowing code: ${getVal('peopleKnowingCode')}`;
@@ -580,17 +575,19 @@
       `;
 
       // 4. Summarize for AI
+      // I have updated this summary to reflect the new category grouping so the AI is not confused
       const existingMeasuresSummary = `
         REPORT REFERENCE: ${reportURN}
-        OUTER PERIMETER: ${perimeterFeatures.join(', ') || 'None selected'}
-        INTERNAL/TECH OPPORTUNITIES: ${techOpps.join(', ') || 'None selected'}
-        VULNERABILITIES IDENTIFIED: ${vulnerabilities.join(', ') || 'None selected'}
+        
+        PHYSICAL SECURITY (PERIMETER & TECH): ${physicalFeatures.join(', ') || 'None selected'}
         
         MAIN BUILDING (SCORES): ${buildingScores}
         MAIN BUILDING FEATURES: ${buildingFeatures.join(', ') || 'None selected'}
         
         INTERNAL SECURITY (DATA): ${internalScores}
         INTERNAL SECURITY PRESENT: ${internalFeatures.join(', ') || 'None selected'}
+
+        IDENTIFIED VULNERABILITIES (RISKS): ${riskFeatures.join(', ') || 'None selected'}
 
         OPERATIONAL & ENVIRONMENT: ${opSec}
 
