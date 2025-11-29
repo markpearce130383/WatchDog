@@ -17,11 +17,11 @@
   
   <style>
     @keyframes fadeIn {
-      from { opacity: 0; transform: translateY(10px); }
+      from { opacity: 0; transform: translateY(-5px); }
       to { opacity: 1; transform: translateY(0); }
     }
     .animate-fadeIn {
-      animation: fadeIn 0.4s ease-out forwards;
+      animation: fadeIn 0.3s ease-out forwards;
     }
     @keyframes progress {
       0% { width: 0% }
@@ -161,96 +161,22 @@
                             </select>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="perimeter_feature" value="Fencing" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Fencing Present</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="perimeter_feature" value="Hedging (Non-thorny)" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Hedging (Non-thorny)</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="perimeter_feature" value="Hedging (Thorny/Defensive)" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Hedging (Thorny)</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="perimeter_feature" value="Walls" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Walls</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="perimeter_feature" value="Gates" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Gates Installed</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="perimeter_feature" value="Secure Postal Delivery System" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Postal Delivery System</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="perimeter_feature" value="Deterrence Signage Present" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Deterrence Signage?</span>
-                            </label>
-                             <label class="flex items-center gap-3 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg cursor-pointer hover:border-red-500 transition">
-                                <input type="checkbox" name="perimeter_feature" value="External Surveillance Positions Possible (Risk)" class="w-4 h-4 text-red-500 rounded focus:ring-red-500">
-                                <span class="text-sm text-red-700 dark:text-red-300">Ext. Surveillance Holes? (Risk)</span>
-                            </label>
-                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="perimeter_grid">
+                            </div>
                     </div>
 
                     <div class="mb-6">
                         <h4 class="text-sm font-bold text-emerald-600 dark:text-emerald-400 mb-3 flex items-center gap-2 border-b border-slate-200 dark:border-slate-700 pb-1">
                             <i data-lucide="scan-eye" class="w-4 h-4"></i> Internal Perimeter & Technology
                         </h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="tech_opp" value="Internal Surveillance Positions" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Int. Surveillance Positions</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="tech_opp" value="Lighting Opportunities" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Lighting Opportunities?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="tech_opp" value="CCTV Opportunities" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">CCTV Opportunities?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="tech_opp" value="Analytic Opportunities" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Analytics Opportunities?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="tech_opp" value="Guard Dog Opportunities" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Guard Dog Opportunities?</span>
-                            </label>
-                             <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="tech_opp" value="PIDs Opportunities" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">PID's Opportunities?</span>
-                            </label>
-                             <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="tech_opp" value="LiDAR Opportunities" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">LiDAR Opportunities?</span>
-                            </label>
-                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="tech_grid"></div>
                     </div>
 
                     <div class="mb-6">
                         <h4 class="text-sm font-bold text-emerald-600 dark:text-emerald-400 mb-3 flex items-center gap-2 border-b border-slate-200 dark:border-slate-700 pb-1">
                             <i data-lucide="unlock" class="w-4 h-4"></i> Vulnerability & Egress
                         </h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                             <label class="flex items-center gap-3 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg cursor-pointer hover:border-red-500 transition">
-                                <input type="checkbox" name="vulnerability" value="Accessible Outbuildings/Sheds" class="w-4 h-4 text-red-500 rounded focus:ring-red-500">
-                                <span class="text-sm text-red-700 dark:text-red-300">Accessible Outbuildings?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg cursor-pointer hover:border-red-500 transition">
-                                <input type="checkbox" name="vulnerability" value="Keys Hidden Outside" class="w-4 h-4 text-red-500 rounded focus:ring-red-500">
-                                <span class="text-sm text-red-700 dark:text-red-300">Keys Hidden Outside?</span>
-                            </label>
-                             <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="vulnerability" value="Egress Preventative Measures" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Egress Prevention (Bollards etc.)</span>
-                            </label>
-                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="vuln_grid"></div>
                     </div>
 
                     <div class="mb-6">
@@ -291,44 +217,7 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                             <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="building_feature" value="Security Film Present" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Security Film?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="building_feature" value="Window Shutters Present" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Window Shutters?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="building_feature" value="Locking Systems Present" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Locking Systems?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg cursor-pointer hover:border-red-500 transition">
-                                <input type="checkbox" name="building_feature" value="Potential for Climbing (Risk)" class="w-4 h-4 text-red-500 rounded focus:ring-red-500">
-                                <span class="text-sm text-red-700 dark:text-red-300">Climbing Potential? (Risk)</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg cursor-pointer hover:border-red-500 transition">
-                                <input type="checkbox" name="building_feature" value="Flat Surfaces to Aid Climbing (Risk)" class="w-4 h-4 text-red-500 rounded focus:ring-red-500">
-                                <span class="text-sm text-red-700 dark:text-red-300">Flat Surfaces? (Risk)</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="building_feature" value="CCTV Present" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">CCTV Present?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="building_feature" value="PIR Lighting Present" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">PIR Lighting?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="building_feature" value="Intruder Alarm Beams" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Intruder Alarm Beams?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="building_feature" value="Intruder Alarm Contacts on Apertures" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Contacts on Apertures?</span>
-                            </label>
-                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="building_grid"></div>
                     </div>
 
                     <div class="mb-6">
@@ -356,76 +245,7 @@
                             </div>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3">
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="internal_feature" value="Intruder Alarm Installed" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Intruder Alarm?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="internal_feature" value="PIR Sensors Installed" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">PIR Sensors?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="internal_feature" value="Monitoring in Place" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Monitoring in Place?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="internal_feature" value="Police Response in Place" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Police Response?</span>
-                            </label>
-                             <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="internal_feature" value="Security Patrols" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Security Patrols?</span>
-                            </label>
-                             <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="internal_feature" value="Key Fobs in Use" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Key Fobs Used?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="internal_feature" value="All Fobs Accounted For" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Fobs Accounted For?</span>
-                            </label>
-                             <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="internal_feature" value="Panic Alarms Installed" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Panic Alarms?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="internal_feature" value="Safe Installed" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Safe Installed?</span>
-                            </label>
-                             <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="internal_feature" value="Quality Safe Present" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Quality/Graded Safe?</span>
-                            </label>
-                             <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="internal_feature" value="Safe is Alarmed" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Safe Alarmed?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="internal_feature" value="Dummy Safe Present" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Dummy Safe?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="internal_feature" value="Panic Room/Secure Space" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Panic Room/Space?</span>
-                            </label>
-                             <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="internal_feature" value="Comms in Secure Space" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Comms in Space?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="internal_feature" value="Smoke Cloaks" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Smoke Cloaks?</span>
-                            </label>
-                             <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="internal_feature" value="Strobe Lighting" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Strobe Lighting?</span>
-                            </label>
-                            <label class="flex items-center gap-3 p-2 bg-white dark:bg-slate-700/50 border border-slate-200 dark:border-slate-600 rounded-lg cursor-pointer hover:border-emerald-500 transition">
-                                <input type="checkbox" name="internal_feature" value="High Value Items in Safe" class="w-4 h-4 text-emerald-500 rounded focus:ring-emerald-500">
-                                <span class="text-sm text-slate-700 dark:text-slate-300">Items in Safe?</span>
-                            </label>
-                        </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="internal_grid"></div>
                     </div>
 
                     <div class="mb-6">
@@ -557,6 +377,99 @@
         return `RCT-${timestamp}-${random}`;
     }
 
+    // --- DYNAMIC CHECKBOX GENERATOR ---
+    // This renders the "Expandable" checkboxes that show a text box when ticked.
+    const renderCheckbox = (name, value, label, isRisk = false) => {
+        const borderColorClass = isRisk 
+            ? 'border-red-200 dark:border-red-800 hover:border-red-500 bg-red-50 dark:bg-red-900/20' 
+            : 'border-slate-200 dark:border-slate-600 hover:border-emerald-500 bg-white dark:bg-slate-700/50';
+        
+        const textColorClass = isRisk ? 'text-red-700 dark:text-red-300' : 'text-slate-700 dark:text-slate-300';
+        const checkboxColor = isRisk ? 'text-red-500 focus:ring-red-500' : 'text-emerald-500 focus:ring-emerald-500';
+
+        return `
+        <div class="p-3 ${borderColorClass} border rounded-lg transition-all duration-200">
+            <label class="flex items-center gap-3 cursor-pointer w-full">
+                <input type="checkbox" name="${name}" value="${value}" class="peer w-4 h-4 ${checkboxColor} rounded">
+                <span class="text-sm ${textColorClass} font-medium flex-1">${label}</span>
+            </label>
+            <div class="hidden peer-checked:block pt-3 animate-fadeIn">
+                <input type="text" placeholder="Add specific details..." 
+                       class="detail-input w-full p-2 text-xs border-b border-slate-300 dark:border-slate-500 bg-transparent focus:border-emerald-500 outline-none ${textColorClass} placeholder-slate-400">
+            </div>
+        </div>
+        `;
+    };
+
+    // --- DATA DEFINITIONS FOR CHECKBOXES ---
+    // This makes the HTML much cleaner and easier to manage
+    const lists = {
+        perimeter: [
+            {val: "Fencing", lbl: "Fencing Present"},
+            {val: "Hedging (Non-thorny)", lbl: "Hedging (Non-thorny)"},
+            {val: "Hedging (Thorny/Defensive)", lbl: "Hedging (Thorny)"},
+            {val: "Walls", lbl: "Walls"},
+            {val: "Gates", lbl: "Gates Installed"},
+            {val: "Secure Postal Delivery System", lbl: "Postal Delivery System"},
+            {val: "Deterrence Signage Present", lbl: "Deterrence Signage?"},
+            {val: "External Surveillance Positions Possible (Risk)", lbl: "Ext. Surveillance Holes? (Risk)", risk: true},
+        ],
+        tech: [
+            {val: "Internal Surveillance Positions", lbl: "Int. Surveillance Positions"},
+            {val: "Lighting Opportunities", lbl: "Lighting Opportunities?"},
+            {val: "CCTV Opportunities", lbl: "CCTV Opportunities?"},
+            {val: "Analytic Opportunities", lbl: "Analytics Opportunities?"},
+            {val: "Guard Dog Opportunities", lbl: "Guard Dog Opportunities?"},
+            {val: "PIDs Opportunities", lbl: "PID's Opportunities?"},
+            {val: "LiDAR Opportunities", lbl: "LiDAR Opportunities?"},
+        ],
+        vuln: [
+            {val: "Accessible Outbuildings/Sheds", lbl: "Accessible Outbuildings?", risk: true},
+            {val: "Keys Hidden Outside", lbl: "Keys Hidden Outside?", risk: true},
+            {val: "Egress Preventative Measures", lbl: "Egress Prevention (Bollards etc.)"},
+        ],
+        building: [
+            {val: "Security Film Present", lbl: "Security Film?"},
+            {val: "Window Shutters Present", lbl: "Window Shutters?"},
+            {val: "Locking Systems Present", lbl: "Locking Systems?"},
+            {val: "Potential for Climbing (Risk)", lbl: "Climbing Potential? (Risk)", risk: true},
+            {val: "Flat Surfaces to Aid Climbing (Risk)", lbl: "Flat Surfaces? (Risk)", risk: true},
+            {val: "CCTV Present", lbl: "CCTV Present?"},
+            {val: "PIR Lighting Present", lbl: "PIR Lighting?"},
+            {val: "Intruder Alarm Beams", lbl: "Intruder Alarm Beams?"},
+            {val: "Intruder Alarm Contacts on Apertures", lbl: "Contacts on Apertures?"},
+        ],
+        internal: [
+            {val: "Intruder Alarm Installed", lbl: "Intruder Alarm?"},
+            {val: "PIR Sensors Installed", lbl: "PIR Sensors?"},
+            {val: "Monitoring in Place", lbl: "Monitoring in Place?"},
+            {val: "Police Response in Place", lbl: "Police Response?"},
+            {val: "Security Patrols", lbl: "Security Patrols?"},
+            {val: "Key Fobs in Use", lbl: "Key Fobs Used?"},
+            {val: "All Fobs Accounted For", lbl: "Fobs Accounted For?"},
+            {val: "Panic Alarms Installed", lbl: "Panic Alarms?"},
+            {val: "Safe Installed", lbl: "Safe Installed?"},
+            {val: "Quality Safe Present", lbl: "Quality/Graded Safe?"},
+            {val: "Safe is Alarmed", lbl: "Safe Alarmed?"},
+            {val: "Dummy Safe Present", lbl: "Dummy Safe?"},
+            {val: "Panic Room/Secure Space", lbl: "Panic Room/Space?"},
+            {val: "Comms in Secure Space", lbl: "Comms in Space?"},
+            {val: "Smoke Cloaks", lbl: "Smoke Cloaks?"},
+            {val: "Strobe Lighting", lbl: "Strobe Lighting?"},
+            {val: "High Value Items in Safe", lbl: "Items in Safe?"},
+        ]
+    };
+
+    // --- INJECT CHECKBOXES ON LOAD ---
+    document.addEventListener('DOMContentLoaded', () => {
+        document.getElementById('perimeter_grid').innerHTML = lists.perimeter.map(i => renderCheckbox('perimeter_feature', i.val, i.lbl, i.risk)).join('');
+        document.getElementById('tech_grid').innerHTML = lists.tech.map(i => renderCheckbox('tech_opp', i.val, i.lbl, i.risk)).join('');
+        document.getElementById('vuln_grid').innerHTML = lists.vuln.map(i => renderCheckbox('vulnerability', i.val, i.lbl, i.risk)).join('');
+        document.getElementById('building_grid').innerHTML = lists.building.map(i => renderCheckbox('building_feature', i.val, i.lbl, i.risk)).join('');
+        document.getElementById('internal_grid').innerHTML = lists.internal.map(i => renderCheckbox('internal_feature', i.val, i.lbl, i.risk)).join('');
+        lucide.createIcons();
+    });
+
     // --- DARK MODE LOGIC ---
     const themeToggle = document.getElementById('theme-toggle');
     if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
@@ -609,28 +522,33 @@
     document.getElementById('riskForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
-      // 1. Generate ID
       const reportURN = generateURN();
-      
-      // Update Loading UI
       document.querySelector('#view-loading h2').innerText = `Processing Report #${reportURN}`;
       switchView('loading');
 
       const formData = new FormData(e.target);
-      
-      // 2. Data Collection Helpers
-      const getChecks = (name) => Array.from(document.querySelectorAll(`input[name="${name}"]:checked`)).map(cb => cb.value);
       const getVal = (id) => document.getElementById(id).value;
+      
+      // NEW HELPER: EXTRACTS VALUE + DETAILS
+      const getEnhancedChecks = (name) => {
+        const checkedBoxes = document.querySelectorAll(`input[name="${name}"]:checked`);
+        return Array.from(checkedBoxes).map(cb => {
+            const container = cb.closest('div');
+            const detailInput = container ? container.querySelector('.detail-input') : null;
+            const detailText = detailInput && detailInput.value.trim() ? ` (${detailInput.value.trim()})` : '';
+            return `${cb.value}${detailText}`;
+        });
+      };
 
       // 3. Construct Data Blocks
-      const perimeterFeatures = getChecks('perimeter_feature');
+      const perimeterFeatures = getEnhancedChecks('perimeter_feature');
       const accessPoints = getVal('accessPoints');
       if (accessPoints) perimeterFeatures.push(`Access Points: ${accessPoints}`);
 
-      const techOpps = getChecks('tech_opp');
-      const vulnerabilities = getChecks('vulnerability');
-      const buildingFeatures = getChecks('building_feature');
-      const internalFeatures = getChecks('internal_feature');
+      const techOpps = getEnhancedChecks('tech_opp');
+      const vulnerabilities = getEnhancedChecks('vulnerability');
+      const buildingFeatures = getEnhancedChecks('building_feature');
+      const internalFeatures = getEnhancedChecks('internal_feature');
 
       const buildingScores = `Door Locks: ${getVal('doorScore')}/5, Wall Construction: ${getVal('wallScore')}/5, Glazing: ${getVal('glazingScore')}/5`;
       const internalScores = `False Alarm Rate: ${getVal('falseAlarmRate')}, People knowing code: ${getVal('peopleKnowingCode')}`;
@@ -667,9 +585,8 @@
         NOTES: ${formData.get('securityNotes').trim()}
       `;
 
-      // 5. Payload for n8n
       const payload = {
-        unique_id: reportURN, // Send ID to n8n
+        unique_id: reportURN,
         address: formData.get('address'),
         email: formData.get('clientEmail'),
         details: formData.get('propertyDetails'),
@@ -687,7 +604,6 @@
           const result = await res.json();
           const htmlContent = result.html || result.output || "<p>Report generated successfully.</p>";
           
-          // Inject Reference ID Header into the Result View
           const headerHTML = `
             <div class="mb-6 border-b border-slate-200 dark:border-slate-700 pb-4">
                 <span class="text-xs font-bold bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 px-2 py-1 rounded">REF: ${reportURN}</span>
