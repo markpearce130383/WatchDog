@@ -154,154 +154,167 @@
                     <i data-lucide="chevron-down" class="w-4 h-4 ml-auto transition-transform duration-300 group-open:rotate-180"></i>
                 </summary>
                 
-                <div class="p-4 pt-0 animate-fadeIn mt-2">
+                <div class="p-4 pt-0 animate-fadeIn mt-2 space-y-4">
                     
-                    <div class="mb-6">
-                        <h4 class="text-sm font-bold text-emerald-600 dark:text-emerald-400 mb-3 flex items-center gap-2 border-b border-slate-200 dark:border-slate-700 pb-1">
-                            <i data-lucide="fence" class="w-4 h-4"></i> Physical Security Measures (Perimeter & Tech)
-                        </h4>
-                        
-                         <div class="mb-4">
-                            <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Total Access Points</label>
-                            <select id="accessPoints" class="w-full md:w-1/2 p-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-slate-700 dark:text-white text-sm">
-                                <option value="1">1 Access Point</option>
-                                <option value="2">2 Access Points</option>
-                                <option value="3">3 Access Points</option>
-                                <option value="4">4 Access Points</option>
-                                <option value="5+">5+ Access Points</option>
-                            </select>
+                    <details class="group/inner bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg">
+                        <summary class="flex items-center gap-2 cursor-pointer font-bold text-emerald-600 dark:text-emerald-400 text-sm select-none p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+                            <i data-lucide="fence" class="w-4 h-4"></i>
+                            <span>Physical Security Measures (Perimeter & Tech)</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 ml-auto transition-transform duration-300 group-open/inner:rotate-90"></i>
+                        </summary>
+                        <div class="p-4 pt-0 animate-fadeIn mt-2">
+                             <div class="mb-4 mt-2">
+                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Total Access Points</label>
+                                <select id="accessPoints" class="w-full md:w-1/2 p-2 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-slate-700 dark:text-white text-sm">
+                                    <option value="1">1 Access Point</option>
+                                    <option value="2">2 Access Points</option>
+                                    <option value="3">3 Access Points</option>
+                                    <option value="4">4 Access Points</option>
+                                    <option value="5+">5+ Access Points</option>
+                                </select>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="physical_measures_grid"></div>
                         </div>
+                    </details>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="physical_measures_grid"></div>
-                    </div>
-
-                    <div class="mb-6">
-                        <h4 class="text-sm font-bold text-emerald-600 dark:text-emerald-400 mb-3 flex items-center gap-2 border-b border-slate-200 dark:border-slate-700 pb-1">
-                            <i data-lucide="home" class="w-4 h-4"></i> Main Building Perimeter
-                        </h4>
-
-                        <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Door Locks (Standard)</label>
-                                <select id="doorScore" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
-                                    <option value="1">1 (Poor)</option>
-                                    <option value="2">2 (Weak)</option>
-                                    <option value="3">3 (Average)</option>
-                                    <option value="4">4 (Good)</option>
-                                    <option value="5">5 (Excellent)</option>
-                                </select>
+                    <details class="group/inner bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg">
+                        <summary class="flex items-center gap-2 cursor-pointer font-bold text-emerald-600 dark:text-emerald-400 text-sm select-none p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+                            <i data-lucide="home" class="w-4 h-4"></i>
+                            <span>Main Building Perimeter</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 ml-auto transition-transform duration-300 group-open/inner:rotate-90"></i>
+                        </summary>
+                        <div class="p-4 pt-0 animate-fadeIn mt-2">
+                            <div class="grid grid-cols-1 md:grid-cols-3 gap-4 mb-4 mt-2">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Door Locks (Standard)</label>
+                                    <select id="doorScore" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
+                                        <option value="1">1 (Poor)</option>
+                                        <option value="2">2 (Weak)</option>
+                                        <option value="3">3 (Average)</option>
+                                        <option value="4">4 (Good)</option>
+                                        <option value="5">5 (Excellent)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Wall Construction</label>
+                                    <select id="wallScore" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
+                                        <option value="1">1 (Poor)</option>
+                                        <option value="2">2 (Weak)</option>
+                                        <option value="3">3 (Average)</option>
+                                        <option value="4">4 (Good)</option>
+                                        <option value="5">5 (Excellent)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Glazing Quality</label>
+                                    <select id="glazingScore" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
+                                        <option value="1">1 (Poor)</option>
+                                        <option value="2">2 (Weak)</option>
+                                        <option value="3">3 (Average)</option>
+                                        <option value="4">4 (Good)</option>
+                                        <option value="5">5 (Excellent)</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Wall Construction</label>
-                                <select id="wallScore" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
-                                    <option value="1">1 (Poor)</option>
-                                    <option value="2">2 (Weak)</option>
-                                    <option value="3">3 (Average)</option>
-                                    <option value="4">4 (Good)</option>
-                                    <option value="5">5 (Excellent)</option>
-                                </select>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="building_grid"></div>
+                        </div>
+                    </details>
+
+                    <details class="group/inner bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg">
+                        <summary class="flex items-center gap-2 cursor-pointer font-bold text-emerald-600 dark:text-emerald-400 text-sm select-none p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+                            <i data-lucide="shield-check" class="w-4 h-4"></i>
+                            <span>Internal Property Security</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 ml-auto transition-transform duration-300 group-open/inner:rotate-90"></i>
+                        </summary>
+                        <div class="p-4 pt-0 animate-fadeIn mt-2">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-2">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Rate of False Alarms</label>
+                                    <select id="falseAlarmRate" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
+                                        <option value="None">None / Rare</option>
+                                        <option value="Occasional">Occasional (1-2/year)</option>
+                                        <option value="Frequent">Frequent (3+/year)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">People Knowing Alarm Code</label>
+                                    <select id="peopleKnowingCode" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
+                                        <option value="1-2">1-2 People</option>
+                                        <option value="3-5">3-5 People</option>
+                                        <option value="6-10">6-10 People</option>
+                                        <option value="10+">10+ People</option>
+                                    </select>
+                                </div>
                             </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Glazing Quality</label>
-                                <select id="glazingScore" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
-                                    <option value="1">1 (Poor)</option>
-                                    <option value="2">2 (Weak)</option>
-                                    <option value="3">3 (Average)</option>
-                                    <option value="4">4 (Good)</option>
-                                    <option value="5">5 (Excellent)</option>
-                                </select>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="internal_grid"></div>
+                        </div>
+                    </details>
+
+                    <details class="group/inner bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg">
+                        <summary class="flex items-center gap-2 cursor-pointer font-bold text-red-600 dark:text-red-400 text-sm select-none p-3 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/20">
+                            <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                            <span>Identified Vulnerabilities</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 ml-auto transition-transform duration-300 group-open/inner:rotate-90"></i>
+                        </summary>
+                        <div class="p-4 pt-0 animate-fadeIn mt-2">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2" id="risk_grid"></div>
+                        </div>
+                    </details>
+
+                    <details class="group/inner bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg">
+                        <summary class="flex items-center gap-2 cursor-pointer font-bold text-emerald-600 dark:text-emerald-400 text-sm select-none p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+                            <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+                            <span>Operational Security & Environment</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 ml-auto transition-transform duration-300 group-open/inner:rotate-90"></i>
+                        </summary>
+                        <div class="p-4 pt-0 animate-fadeIn mt-2">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">How often are codes changed?</label>
+                                    <textarea id="codeFreq" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                 <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Alarm & CCTV Monitoring Setup?</label>
+                                    <textarea id="monitoringSetup" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Site Lockdown Procedures?</label>
+                                    <textarea id="lockdownProc" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                 <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Open Windows/Doors Protocol?</label>
+                                    <textarea id="openWindowProc" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Drone Vulnerability?</label>
+                                    <textarea id="droneVuln" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                 <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Public Rights of Way/Footfall?</label>
+                                    <textarea id="publicRights" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Insider Threat Vulnerabilities?</label>
+                                    <textarea id="insiderThreat" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                 <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Invacuation or Evacuation?</label>
+                                    <textarea id="invacEvac" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Neighbourhood Watch Schemes?</label>
+                                    <textarea id="neighbourScheme" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                 <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Assets & Trackers/Markers?</label>
+                                    <textarea id="assetTrackers" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
                             </div>
                         </div>
+                    </details>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="building_grid"></div>
-                    </div>
-
-                    <div class="mb-6">
-                        <h4 class="text-sm font-bold text-emerald-600 dark:text-emerald-400 mb-3 flex items-center gap-2 border-b border-slate-200 dark:border-slate-700 pb-1">
-                            <i data-lucide="shield-check" class="w-4 h-4"></i> Internal Property Security
-                        </h4>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Rate of False Alarms</label>
-                                <select id="falseAlarmRate" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
-                                    <option value="None">None / Rare</option>
-                                    <option value="Occasional">Occasional (1-2/year)</option>
-                                    <option value="Frequent">Frequent (3+/year)</option>
-                                </select>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">People Knowing Alarm Code</label>
-                                <select id="peopleKnowingCode" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
-                                    <option value="1-2">1-2 People</option>
-                                    <option value="3-5">3-5 People</option>
-                                    <option value="6-10">6-10 People</option>
-                                    <option value="10+">10+ People</option>
-                                </select>
-                            </div>
-                        </div>
-
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="internal_grid"></div>
-                    </div>
-
-                    <div class="mb-6">
-                        <h4 class="text-sm font-bold text-red-600 dark:text-red-400 mb-3 flex items-center gap-2 border-b border-red-200 dark:border-red-800 pb-1">
-                            <i data-lucide="alert-triangle" class="w-4 h-4"></i> Identified Vulnerabilities
-                        </h4>
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="risk_grid"></div>
-                    </div>
-
-                    <div class="mb-6">
-                        <h4 class="text-sm font-bold text-emerald-600 dark:text-emerald-400 mb-3 flex items-center gap-2 border-b border-slate-200 dark:border-slate-700 pb-1">
-                            <i data-lucide="clipboard-list" class="w-4 h-4"></i> Operational Security & Environment
-                        </h4>
-                        
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">How often are codes changed?</label>
-                                <textarea id="codeFreq" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
-                            </div>
-                             <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Alarm & CCTV Monitoring Setup?</label>
-                                <textarea id="monitoringSetup" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Site Lockdown Procedures?</label>
-                                <textarea id="lockdownProc" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
-                            </div>
-                             <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Open Windows/Doors Protocol?</label>
-                                <textarea id="openWindowProc" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Drone Vulnerability?</label>
-                                <textarea id="droneVuln" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
-                            </div>
-                             <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Public Rights of Way/Footfall?</label>
-                                <textarea id="publicRights" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Insider Threat Vulnerabilities?</label>
-                                <textarea id="insiderThreat" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
-                            </div>
-                             <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Invacuation or Evacuation?</label>
-                                <textarea id="invacEvac" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
-                            </div>
-                            <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Neighbourhood Watch Schemes?</label>
-                                <textarea id="neighbourScheme" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
-                            </div>
-                             <div>
-                                <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Assets & Trackers/Markers?</label>
-                                <textarea id="assetTrackers" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div>
-                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2 mt-4">
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
                             Additional Security Observations
                         </label>
                         <textarea name="securityNotes" rows="2" placeholder="e.g. Broken lock on rear gate, CCTV sun-glare issues..."
@@ -380,8 +393,7 @@
         return `RCT-${timestamp}-${random}`;
     }
 
-    // --- HELPER: TOGGLE TEXT BOX VISIBILITY (THE FIX) ---
-    // This function ensures the box opens regardless of CSS nesting
+    // --- HELPER: TOGGLE TEXT BOX VISIBILITY ---
     window.toggleDetail = (checkbox) => {
         const container = checkbox.closest('.checkbox-item');
         const detailBox = container.querySelector('.detail-box');
@@ -401,7 +413,6 @@
         const textColorClass = isRisk ? 'text-red-700 dark:text-red-300' : 'text-slate-700 dark:text-slate-300';
         const checkboxColor = isRisk ? 'text-red-500 focus:ring-red-500' : 'text-emerald-500 focus:ring-emerald-500';
 
-        // We add 'checkbox-item' class to the parent div to easily find it with JS
         return `
         <div class="checkbox-item p-3 ${borderColorClass} border rounded-lg transition-all duration-200">
             <label class="flex items-center gap-3 cursor-pointer w-full">
@@ -416,10 +427,9 @@
         `;
     };
 
-    // --- CLEAN DATA DEFINITIONS (NO "PRESENT" / "(RISK)") ---
+    // --- CLEAN DATA DEFINITIONS ---
     const lists = {
         physical_measures: [
-            // From Perimeter
             {val: "Fencing", lbl: "Fencing"},
             {val: "Hedging (Non-thorny)", lbl: "Hedging (Non-thorny)"},
             {val: "Hedging (Thorny/Defensive)", lbl: "Hedging (Thorny)"},
@@ -427,14 +437,12 @@
             {val: "Gates", lbl: "Gates Installed"},
             {val: "Secure Postal Delivery System", lbl: "Postal Delivery System"},
             {val: "Deterrence Signage", lbl: "Deterrence Signage"},
-            // From Tech
             {val: "Lighting", lbl: "Lighting"},
             {val: "CCTV", lbl: "CCTV"},
             {val: "Analytics", lbl: "Analytics"},
             {val: "Guard Dogs", lbl: "Guard Dogs"},
             {val: "PIDs", lbl: "PIDs"},
             {val: "LiDAR", lbl: "LiDAR"},
-            // From Vuln
             {val: "Egress Preventative Measures", lbl: "Egress Prevention (Bollards etc.)"},
         ],
         building: [
@@ -466,7 +474,6 @@
             {val: "High Value Items in Safe", lbl: "Items in Safe"},
         ],
         risks: [
-            // All Red Risks Consolidated Here
             {val: "External Surveillance Positions Possible", lbl: "External Surveillance Holes", risk: true},
             {val: "Internal Surveillance Positions", lbl: "Internal Surveillance Positions", risk: true},
             {val: "Accessible Outbuildings/Sheds", lbl: "Accessible Outbuildings/Sheds", risk: true},
@@ -477,7 +484,6 @@
     };
 
     // --- INJECT CHECKBOXES ON LOAD ---
-    // Updated mapping to new ID targets
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('physical_measures_grid').innerHTML = lists.physical_measures.map(i => renderCheckbox('physical_feature', i.val, i.lbl, i.risk)).join('');
         document.getElementById('building_grid').innerHTML = lists.building.map(i => renderCheckbox('building_feature', i.val, i.lbl, i.risk)).join('');
@@ -549,15 +555,14 @@
       const getEnhancedChecks = (name) => {
         const checkedBoxes = document.querySelectorAll(`input[name="${name}"]:checked`);
         return Array.from(checkedBoxes).map(cb => {
-            const container = cb.closest('.checkbox-item'); // Updated to use the new wrapper class
+            const container = cb.closest('.checkbox-item');
             const detailInput = container ? container.querySelector('.detail-input') : null;
             const detailText = detailInput && detailInput.value.trim() ? ` (Details: ${detailInput.value.trim()})` : '';
             return `${cb.value}${detailText}`;
         });
       };
 
-      // 3. Construct Data Blocks (UPDATED NAMES)
-      // I have updated these to grab the new checkbox names defined in the `renderCheckbox` mapping above
+      // 3. Construct Data Blocks
       const physicalFeatures = getEnhancedChecks('physical_feature');
       const accessPoints = getVal('accessPoints');
       if (accessPoints) physicalFeatures.push(`Access Points: ${accessPoints}`);
@@ -584,7 +589,6 @@
       `;
 
       // 4. Summarize for AI
-      // I have updated this summary to reflect the new category grouping so the AI is not confused
       const existingMeasuresSummary = `
         REPORT REFERENCE: ${reportURN}
         
