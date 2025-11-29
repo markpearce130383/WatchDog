@@ -161,8 +161,7 @@
                             </select>
                         </div>
 
-                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="perimeter_grid">
-                            </div>
+                        <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="perimeter_grid"></div>
                     </div>
 
                     <div class="mb-6">
@@ -377,8 +376,19 @@
         return `RCT-${timestamp}-${random}`;
     }
 
+    // --- HELPER: TOGGLE TEXT BOX VISIBILITY (THE FIX) ---
+    // This function ensures the box opens regardless of CSS nesting
+    window.toggleDetail = (checkbox) => {
+        const container = checkbox.closest('.checkbox-item');
+        const detailBox = container.querySelector('.detail-box');
+        if (checkbox.checked) {
+            detailBox.classList.remove('hidden');
+        } else {
+            detailBox.classList.add('hidden');
+        }
+    };
+
     // --- DYNAMIC CHECKBOX GENERATOR ---
-    // This renders the "Expandable" checkboxes that show a text box when ticked.
     const renderCheckbox = (name, value, label, isRisk = false) => {
         const borderColorClass = isRisk 
             ? 'border-red-200 dark:border-red-800 hover:border-red-500 bg-red-50 dark:bg-red-900/20' 
@@ -387,13 +397,14 @@
         const textColorClass = isRisk ? 'text-red-700 dark:text-red-300' : 'text-slate-700 dark:text-slate-300';
         const checkboxColor = isRisk ? 'text-red-500 focus:ring-red-500' : 'text-emerald-500 focus:ring-emerald-500';
 
+        // We add 'checkbox-item' class to the parent div to easily find it with JS
         return `
-        <div class="p-3 ${borderColorClass} border rounded-lg transition-all duration-200">
+        <div class="checkbox-item p-3 ${borderColorClass} border rounded-lg transition-all duration-200">
             <label class="flex items-center gap-3 cursor-pointer w-full">
-                <input type="checkbox" name="${name}" value="${value}" class="peer w-4 h-4 ${checkboxColor} rounded">
+                <input type="checkbox" name="${name}" value="${value}" onclick="toggleDetail(this)" class="w-4 h-4 ${checkboxColor} rounded">
                 <span class="text-sm ${textColorClass} font-medium flex-1">${label}</span>
             </label>
-            <div class="hidden peer-checked:block pt-3 animate-fadeIn">
+            <div class="detail-box hidden pt-3 animate-fadeIn">
                 <input type="text" placeholder="Add specific details..." 
                        class="detail-input w-full p-2 text-xs border-b border-slate-300 dark:border-slate-500 bg-transparent focus:border-emerald-500 outline-none ${textColorClass} placeholder-slate-400">
             </div>
@@ -402,7 +413,7 @@
     };
 
     // --- DATA DEFINITIONS FOR CHECKBOXES ---
-    // This makes the HTML much cleaner and easier to manage
+    // UPDATED: Int. Surveillance Positions is now marked as RISK (risk: true)
     const lists = {
         perimeter: [
             {val: "Fencing", lbl: "Fencing Present"},
@@ -415,7 +426,8 @@
             {val: "External Surveillance Positions Possible (Risk)", lbl: "Ext. Surveillance Holes? (Risk)", risk: true},
         ],
         tech: [
-            {val: "Internal Surveillance Positions", lbl: "Int. Surveillance Positions"},
+            // Updated to be a Risk
+            {val: "Internal Surveillance Positions", lbl: "Int. Surveillance Positions", risk: true},
             {val: "Lighting Opportunities", lbl: "Lighting Opportunities?"},
             {val: "CCTV Opportunities", lbl: "CCTV Opportunities?"},
             {val: "Analytic Opportunities", lbl: "Analytics Opportunities?"},
@@ -533,9 +545,9 @@
       const getEnhancedChecks = (name) => {
         const checkedBoxes = document.querySelectorAll(`input[name="${name}"]:checked`);
         return Array.from(checkedBoxes).map(cb => {
-            const container = cb.closest('div');
+            const container = cb.closest('.checkbox-item'); // Updated to use the new wrapper class
             const detailInput = container ? container.querySelector('.detail-input') : null;
-            const detailText = detailInput && detailInput.value.trim() ? ` (${detailInput.value.trim()})` : '';
+            const detailText = detailInput && detailInput.value.trim() ? ` (Details: ${detailInput.value.trim()})` : '';
             return `${cb.value}${detailText}`;
         });
       };
@@ -633,6 +645,8 @@
     window.resetApp = () => {
       document.getElementById('riskForm').reset();
       document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
+      // Ensure hidden boxes are re-hidden
+      document.querySelectorAll('.detail-box').forEach(box => box.classList.add('hidden'));
       switchView('form');
     };
   </script>
