@@ -126,6 +126,31 @@
                              class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-slate-700 dark:text-white">
                     </div>
                 </div>
+
+                <div class="mt-4 border-t border-slate-200 dark:border-slate-700 pt-4">
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                        Upload Site Photo / Plan (Optional)
+                        <span class="text-xs text-slate-400 block font-normal mt-1">AI will check for climbing points, blind spots, and perimeter weakness.</span>
+                    </label>
+                    <div class="flex items-center justify-center w-full">
+                        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-lg cursor-pointer bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center">
+                                <i data-lucide="upload-cloud" class="w-8 h-8 text-slate-400 mb-2"></i>
+                                <p class="text-sm text-slate-500 dark:text-slate-400"><span class="font-semibold">Click to upload</span></p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1" id="file-name">JPG/PNG (Auto-Compressed)</p>
+                            </div>
+                            <input id="dropzone-file" type="file" class="hidden" accept="image/*" />
+                        </label>
+                    </div>
+                    <input type="hidden" id="imageBase64">
+                    
+                    <div class="mt-3">
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Image Description / Context</label>
+                        <input type="text" id="imageDescription" placeholder="e.g. Rear garden gate, Side entrance view..." 
+                               class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm outline-none focus:border-emerald-500 transition">
+                    </div>
+                </div>
+
             </div>
           </details>
 
@@ -405,6 +430,47 @@
         }
     };
 
+    // --- IMAGE COMPRESSION HELPER ---
+    const fileInput = document.getElementById('dropzone-file');
+    const base64Input = document.getElementById('imageBase64');
+    const fileNameDisplay = document.getElementById('file-name');
+
+    fileInput.addEventListener('change', (e) => {
+        const file = e.target.files[0];
+        if (!file) return;
+
+        fileNameDisplay.textContent = "Compressing: " + file.name + "...";
+        
+        const reader = new FileReader();
+        reader.readAsDataURL(file);
+        reader.onload = (event) => {
+            const img = new Image();
+            img.src = event.target.result;
+            img.onload = () => {
+                const canvas = document.createElement('canvas');
+                const ctx = canvas.getContext('2d');
+                
+                const MAX_WIDTH = 800;
+                let width = img.width;
+                let height = img.height;
+
+                if (width > MAX_WIDTH) {
+                    height *= MAX_WIDTH / width;
+                    width = MAX_WIDTH;
+                }
+
+                canvas.width = width;
+                canvas.height = height;
+                ctx.drawImage(img, 0, 0, width, height);
+
+                const dataUrl = canvas.toDataURL('image/jpeg', 0.7);
+                base64Input.value = dataUrl; 
+                fileNameDisplay.textContent = "✅ Ready: " + file.name;
+                fileNameDisplay.classList.add('text-emerald-500');
+            };
+        };
+    });
+
     // --- DYNAMIC CHECKBOX GENERATOR ---
     const renderCheckbox = (name, value, label, isRisk = false) => {
         const borderColorClass = isRisk 
@@ -428,14 +494,14 @@
         `;
     };
 
-    // --- CLEAN DATA DEFINITIONS ---
+    // --- CLEAN DATA DEFINITIONS (NO "PRESENT" / NO "INSTALLED" / NO "?") ---
     const lists = {
         physical_measures: [
             {val: "Fencing", lbl: "Fencing"},
             {val: "Hedging (Non-thorny)", lbl: "Hedging (Non-thorny)"},
             {val: "Hedging (Thorny/Defensive)", lbl: "Hedging (Thorny)"},
             {val: "Walls", lbl: "Walls"},
-            {val: "Gates", lbl: "Gates Installed"},
+            {val: "Gates", lbl: "Gates"},
             {val: "Secure Postal Delivery System", lbl: "Postal Delivery System"},
             {val: "Deterrence Signage", lbl: "Deterrence Signage"},
             {val: "Lighting", lbl: "Lighting"},
@@ -484,7 +550,6 @@
         ]
     };
 
-    // --- INJECT CHECKBOXES ON LOAD ---
     document.addEventListener('DOMContentLoaded', () => {
         document.getElementById('physical_measures_grid').innerHTML = lists.physical_measures.map(i => renderCheckbox('physical_feature', i.val, i.lbl, i.risk)).join('');
         document.getElementById('building_grid').innerHTML = lists.building.map(i => renderCheckbox('building_feature', i.val, i.lbl, i.risk)).join('');
@@ -493,7 +558,6 @@
         lucide.createIcons();
     });
 
-    // --- DARK MODE LOGIC ---
     const themeToggle = document.getElementById('theme-toggle');
     if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
@@ -512,7 +576,6 @@
       lucide.createIcons(); 
     });
 
-    // --- DOM ELEMENTS ---
     const loginScreen = document.getElementById('login-screen');
     const mainApp = document.getElementById('main-app');
     const views = {
@@ -521,7 +584,6 @@
       result: document.getElementById('view-result')
     };
 
-    // --- INIT & LOGIN ---
     if (sessionStorage.getItem('isLoggedIn') === 'true') showApp();
 
     document.getElementById('loginForm').addEventListener('submit', (e) => {
@@ -541,7 +603,6 @@
       lucide.createIcons();
     }
 
-    // --- SUBMIT LOGIC ---
     document.getElementById('riskForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -552,7 +613,6 @@
       const formData = new FormData(e.target);
       const getVal = (id) => document.getElementById(id).value;
       
-      // NEW HELPER: EXTRACTS VALUE + DETAILS
       const getEnhancedChecks = (name) => {
         const checkedBoxes = document.querySelectorAll(`input[name="${name}"]:checked`);
         return Array.from(checkedBoxes).map(cb => {
@@ -563,7 +623,6 @@
         });
       };
 
-      // 3. Construct Data Blocks
       const physicalFeatures = getEnhancedChecks('physical_feature');
       const accessPoints = getVal('accessPoints');
       if (accessPoints) physicalFeatures.push(`Access Points: ${accessPoints}`);
@@ -575,7 +634,6 @@
       const buildingScores = `Door Locks: ${getVal('doorScore')}/5, Wall Construction: ${getVal('wallScore')}/5, Glazing: ${getVal('glazingScore')}/5`;
       const internalScores = `False Alarm Rate: ${getVal('falseAlarmRate')}, People knowing code: ${getVal('peopleKnowingCode')}`;
 
-      // Collect Operational/Environment
       const opSec = `
         Code Changes: ${getVal('codeFreq')}
         Monitoring: ${getVal('monitoringSetup')}
@@ -589,7 +647,8 @@
         Assets/Trackers: ${getVal('assetTrackers')}
       `;
 
-      // 4. Summarize for AI
+      const imageDesc = document.getElementById('imageDescription').value;
+
       const existingMeasuresSummary = `
         REPORT REFERENCE: ${reportURN}
         
@@ -607,6 +666,8 @@
 
         OPERATIONAL & ENVIRONMENT: ${opSec}
 
+        SITE IMAGE CONTEXT: ${imageDesc}
+
         NOTES: ${formData.get('securityNotes').trim()}
       `;
 
@@ -616,6 +677,7 @@
         email: formData.get('clientEmail'),
         details: formData.get('propertyDetails'),
         security_profile: document.getElementById('securityProfile').value,
+        site_image: document.getElementById('imageBase64').value,
         existing_measures: existingMeasuresSummary
       };
 
@@ -659,7 +721,6 @@
     window.resetApp = () => {
       document.getElementById('riskForm').reset();
       document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
-      // Ensure hidden boxes are re-hidden
       document.querySelectorAll('.detail-box').forEach(box => box.classList.add('hidden'));
       switchView('form');
     };
