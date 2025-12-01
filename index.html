@@ -1,12 +1,406 @@
-<script>
+<!DOCTYPE html>
+<html lang="en-GB">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Residential Crime Tracker</title>
+  
+  <script src="https://cdn.tailwindcss.com"></script>
+  <script>
+    tailwind.config = {
+      darkMode: 'class',
+    }
+  </script>
+  
+  <script src="https://unpkg.com/lucide@latest"></script>
+  <script src="https://cdn.tailwindcss.com?plugins=typography"></script>
+  
+  <style>
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(-5px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+    .animate-fadeIn {
+      animation: fadeIn 0.3s ease-out forwards;
+    }
+    @keyframes progress {
+      0% { width: 0% }
+      100% { width: 100% }
+    }
+    .animate-progress {
+      animation: progress 45s ease-out forwards;
+    }
+    
+    details > summary {
+      list-style: none;
+    }
+    details > summary::-webkit-details-marker {
+      display: none;
+    }
+
+    #report-content table {
+      display: block;
+      width: 100%;
+      overflow-x: auto;
+      margin-bottom: 1rem;
+      border-radius: 6px;
+    }
+    .dark #report-content table { color: #e2e8f0; }
+    .dark #report-content th { background-color: #1e293b; color: #f1f5f9; }
+    .dark #report-content td { border-color: #334155; }
+    
+    @media print {
+      .no-print { display: none !important; }
+      body { background: white !important; color: black !important; }
+      .shadow-2xl { box-shadow: none !important; }
+      #report-content { padding: 0 !important; border: none !important; }
+    }
+  </style>
+</head>
+<body class="bg-slate-100 dark:bg-slate-950 min-h-screen font-sans text-slate-800 dark:text-slate-200 transition-colors duration-300">
+
+  <button id="theme-toggle" class="fixed top-4 right-4 z-[10000] p-2 rounded-full bg-white dark:bg-slate-800 text-slate-600 dark:text-slate-300 shadow-lg hover:scale-110 transition-transform border border-slate-200 dark:border-slate-700">
+    <i data-lucide="sun" class="w-5 h-5 hidden dark:block"></i>
+    <i data-lucide="moon" class="w-5 h-5 block dark:hidden"></i>
+  </button>
+
+  <div id="login-screen" class="fixed inset-0 z-[9999] bg-slate-100 dark:bg-slate-950 flex flex-col items-center justify-center p-4 transition-colors duration-300">
+    <div class="bg-white dark:bg-slate-800 p-8 rounded-xl shadow-2xl w-full max-w-sm text-center border border-slate-200 dark:border-slate-700">
+      <i data-lucide="shield-alert" class="w-12 h-12 mx-auto text-slate-400 mb-4"></i>
+      <h3 class="text-xl font-bold text-slate-800 dark:text-white mb-2">Analyst Access</h3>
+      <p class="text-sm text-slate-500 dark:text-slate-400 mb-6">Enter access code to proceed.</p>
+      <form id="loginForm" class="space-y-4">
+        <input type="password" id="password" placeholder="Enter Password" 
+               class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg text-center focus:ring-2 focus:ring-emerald-500 outline-none transition bg-white dark:bg-slate-700 dark:text-white dark:placeholder-slate-400">
+        <button type="submit" 
+                class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-3 rounded-lg transition">
+          Unlock System
+        </button>
+      </form>
+      <p id="loginError" class="text-red-500 text-sm mt-4 font-medium hidden"></p>
+    </div>
+  </div>
+
+  <div id="main-app" class="hidden p-4 md:p-8">
+    
+    <div id="view-form" class="max-w-3xl mx-auto animate-fadeIn">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-xl overflow-hidden border border-slate-200 dark:border-slate-700 transition-colors duration-300">
+        <div class="bg-slate-900 dark:bg-black p-6 text-white">
+          <div class="flex items-center gap-3 mb-2">
+            <i data-lucide="map-pin" class="w-8 h-8 text-emerald-400"></i>
+            <h1 class="text-2xl font-bold">Residential Crime Tracker</h1>
+          </div>
+          <p class="text-slate-400">Generate Threat Matrix & Vulnerability Assessments.</p>
+        </div>
+
+        <form id="riskForm" class="p-6 space-y-4">
+          
+          <details class="group bg-slate-50 dark:bg-slate-800/50 rounded-lg transition-all duration-300" open>
+            <summary class="flex items-center gap-2 cursor-pointer font-bold text-slate-500 hover:text-emerald-500 dark:text-slate-400 dark:hover:text-emerald-400 uppercase tracking-wider text-sm select-none p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50">
+                <i data-lucide="home" class="w-4 h-4"></i>
+                <span>Property & Client</span>
+                <i data-lucide="chevron-down" class="w-4 h-4 ml-auto transition-transform duration-300 group-open:rotate-180"></i>
+            </summary>
+            <div class="p-4 pt-0 animate-fadeIn mt-2">
+                
+                <div class="mb-4">
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Security Profile & Budget</label>
+                    <select id="securityProfile" class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-slate-700 dark:text-white">
+                        <option value="Standard Residential">Standard Residential (Average Family Home)</option>
+                        <option value="Elevated Residential">Elevated Residential (Large Detached / HNW)</option>
+                        <option value="High Risk">High Risk (UHNW / Estate / Specific Threat)</option>
+                        <option value="Rural Farm">Working Farm / Rural Smallholding</option>
+                    </select>
+                </div>
+
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
+                    <div>
+                      <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Target Address</label>
+                      <input type="text" name="address" required placeholder="e.g. Windsor Castle, Windsor, Berkshire"
+                             class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-slate-700 dark:text-white">
+                    </div>
+                    <div>
+                      <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-1">Client Email (For Report)</label>
+                      <input type="email" name="clientEmail" required placeholder="client@example.com"
+                             class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-slate-700 dark:text-white">
+                    </div>
+                </div>
+
+                <div class="mt-4 border-t border-slate-200 dark:border-slate-700 pt-4">
+                    <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                        Upload Site Photos (Multiple)
+                        <span class="text-xs text-slate-400 block font-normal mt-1">AI will check for climbing points, blind spots, and perimeter weakness.</span>
+                    </label>
+                    <div class="flex items-center justify-center w-full">
+                        <label for="dropzone-file" class="flex flex-col items-center justify-center w-full h-32 border-2 border-slate-300 dark:border-slate-600 border-dashed rounded-lg cursor-pointer bg-slate-50 dark:bg-slate-900 hover:bg-slate-100 dark:hover:bg-slate-800 transition">
+                            <div class="flex flex-col items-center justify-center pt-5 pb-6 text-center">
+                                <i data-lucide="upload-cloud" class="w-8 h-8 text-slate-400 mb-2"></i>
+                                <p class="text-sm text-slate-500 dark:text-slate-400"><span class="font-semibold">Click to upload photos</span></p>
+                                <p class="text-xs text-slate-500 dark:text-slate-400 mt-1" id="file-name">JPG/PNG (Auto-Compressed)</p>
+                            </div>
+                            <input id="dropzone-file" type="file" class="hidden" accept="image/*" multiple />
+                        </label>
+                    </div>
+                    
+                    <div class="mt-3">
+                        <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Image Description / Context</label>
+                        <input type="text" id="imageDescription" placeholder="e.g. Rear garden gate, Side entrance view..." 
+                               class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm outline-none focus:border-emerald-500 transition">
+                    </div>
+                </div>
+
+            </div>
+          </details>
+
+          <details class="group bg-slate-50 dark:bg-slate-800/50 rounded-lg transition-all duration-300">
+            <summary class="flex items-center gap-2 cursor-pointer font-bold text-slate-500 hover:text-emerald-500 dark:text-slate-400 dark:hover:text-emerald-400 uppercase tracking-wider text-sm select-none p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50">
+                <i data-lucide="file-search" class="w-4 h-4"></i>
+                <span>Property Context</span>
+                <i data-lucide="chevron-down" class="w-4 h-4 ml-auto transition-transform duration-300 group-open:rotate-180"></i>
+            </summary>
+            <div class="p-4 pt-0 animate-fadeIn mt-2">
+                <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                    Overview of Style & Occupancy
+                </label>
+                <p class="text-xs text-slate-500 dark:text-slate-400 mb-2">
+                    Describe boundaries, occupancy (weekend/family), foot traffic, on-site staff, and age of property.
+                </p>
+                <textarea name="propertyDetails" rows="4" required 
+                    class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-slate-800 dark:text-white resize-y"
+                    placeholder="e.g. Weekend retreat with heavy foot traffic. Grade II listed building. 3 on-site staff..."></textarea>
+            </div>
+          </details>
+
+          <details class="group bg-slate-50 dark:bg-slate-800/50 rounded-lg transition-all duration-300">
+                <summary class="flex items-center gap-2 cursor-pointer font-bold text-slate-500 hover:text-emerald-500 dark:text-slate-400 dark:hover:text-emerald-400 uppercase tracking-wider text-sm select-none p-3 rounded-lg hover:bg-slate-100 dark:hover:bg-slate-700/50">
+                    <i data-lucide="lock" class="w-4 h-4"></i>
+                    <span>Existing Physical Measures & Security</span>
+                    <i data-lucide="chevron-down" class="w-4 h-4 ml-auto transition-transform duration-300 group-open:rotate-180"></i>
+                </summary>
+                
+                <div class="p-4 pt-0 animate-fadeIn mt-2 space-y-4">
+                    
+                    <details class="group/inner bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg">
+                        <summary class="flex items-center gap-2 cursor-pointer font-bold text-emerald-600 dark:text-emerald-400 text-sm select-none p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+                            <i data-lucide="home" class="w-4 h-4"></i>
+                            <span>Physical Security & Building Perimeter</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 ml-auto transition-transform duration-300 group-open/inner:rotate-90"></i>
+                        </summary>
+                        <div class="p-4 pt-0 animate-fadeIn mt-2">
+                             
+                             <div class="grid grid-cols-1 md:grid-cols-4 gap-4 mb-6">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Total Access Points</label>
+                                    <select id="accessPoints" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
+                                        <option value="1">1 Point</option>
+                                        <option value="2">2 Points</option>
+                                        <option value="3">3 Points</option>
+                                        <option value="4">4 Points</option>
+                                        <option value="5+">5+ Points</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Door Locks</label>
+                                    <select id="doorScore" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
+                                        <option value="1">1 (Poor)</option>
+                                        <option value="2">2 (Weak)</option>
+                                        <option value="3">3 (Average)</option>
+                                        <option value="4">4 (Good)</option>
+                                        <option value="5">5 (Excellent)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Wall Construction</label>
+                                    <select id="wallScore" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
+                                        <option value="1">1 (Poor)</option>
+                                        <option value="2">2 (Weak)</option>
+                                        <option value="3">3 (Average)</option>
+                                        <option value="4">4 (Good)</option>
+                                        <option value="5">5 (Excellent)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Glazing Quality</label>
+                                    <select id="glazingScore" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
+                                        <option value="1">1 (Poor)</option>
+                                        <option value="2">2 (Weak)</option>
+                                        <option value="3">3 (Average)</option>
+                                        <option value="4">4 (Good)</option>
+                                        <option value="5">5 (Excellent)</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="merged_physical_grid"></div>
+                        </div>
+                    </details>
+
+                    <details class="group/inner bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg">
+                        <summary class="flex items-center gap-2 cursor-pointer font-bold text-emerald-600 dark:text-emerald-400 text-sm select-none p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+                            <i data-lucide="shield-check" class="w-4 h-4"></i>
+                            <span>Internal Property Security</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 ml-auto transition-transform duration-300 group-open/inner:rotate-90"></i>
+                        </summary>
+                        <div class="p-4 pt-0 animate-fadeIn mt-2">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4 mt-2">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Rate of False Alarms</label>
+                                    <select id="falseAlarmRate" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
+                                        <option value="None">None / Rare</option>
+                                        <option value="Occasional">Occasional (1-2/year)</option>
+                                        <option value="Frequent">Frequent (3+/year)</option>
+                                    </select>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">People Knowing Alarm Code</label>
+                                    <select id="peopleKnowingCode" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
+                                        <option value="1-2">1-2 People</option>
+                                        <option value="3-5">3-5 People</option>
+                                        <option value="6-10">6-10 People</option>
+                                        <option value="10+">10+ People</option>
+                                    </select>
+                                </div>
+                            </div>
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3" id="internal_grid"></div>
+                        </div>
+                    </details>
+
+                    <details class="group/inner bg-red-50 dark:bg-red-900/10 border border-red-200 dark:border-red-800 rounded-lg">
+                        <summary class="flex items-center gap-2 cursor-pointer font-bold text-red-600 dark:text-red-400 text-sm select-none p-3 rounded-lg hover:bg-red-100 dark:hover:bg-red-900/20">
+                            <i data-lucide="alert-triangle" class="w-4 h-4"></i>
+                            <span>Identified Vulnerabilities</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 ml-auto transition-transform duration-300 group-open/inner:rotate-90"></i>
+                        </summary>
+                        <div class="p-4 pt-0 animate-fadeIn mt-2">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-3 mt-2" id="risk_grid"></div>
+                        </div>
+                    </details>
+
+                    <details class="group/inner bg-white dark:bg-slate-900/50 border border-slate-200 dark:border-slate-700 rounded-lg">
+                        <summary class="flex items-center gap-2 cursor-pointer font-bold text-emerald-600 dark:text-emerald-400 text-sm select-none p-3 rounded-lg hover:bg-slate-50 dark:hover:bg-slate-800">
+                            <i data-lucide="clipboard-list" class="w-4 h-4"></i>
+                            <span>Operational Security & Environment</span>
+                            <i data-lucide="chevron-right" class="w-4 h-4 ml-auto transition-transform duration-300 group-open/inner:rotate-90"></i>
+                        </summary>
+                        <div class="p-4 pt-0 animate-fadeIn mt-2">
+                            <div class="grid grid-cols-1 md:grid-cols-2 gap-4 mt-2">
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">How often are codes changed?</label>
+                                    <textarea id="codeFreq" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                 <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Alarm & CCTV Monitoring Setup?</label>
+                                    <textarea id="monitoringSetup" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Site Lockdown Procedures?</label>
+                                    <textarea id="lockdownProc" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                 <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Open Windows/Doors Protocol?</label>
+                                    <textarea id="openWindowProc" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Drone Vulnerability?</label>
+                                    <textarea id="droneVuln" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                 <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Public Rights of Way/Footfall?</label>
+                                    <textarea id="publicRights" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Insider Threat Vulnerabilities?</label>
+                                    <textarea id="insiderThreat" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                 <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Invacuation or Evacuation?</label>
+                                    <textarea id="invacEvac" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Neighbourhood Watch Schemes?</label>
+                                    <textarea id="neighbourScheme" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                                 <div>
+                                    <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Assets & Trackers/Markers?</label>
+                                    <textarea id="assetTrackers" rows="2" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm resize-none"></textarea>
+                                </div>
+                            </div>
+                        </div>
+                    </details>
+
+                    <div class="mt-4">
+                        <label class="block text-sm font-medium text-slate-700 dark:text-slate-300 mb-2">
+                            Additional Security Observations
+                        </label>
+                        <textarea name="securityNotes" rows="2" placeholder="e.g. Broken lock on rear gate, CCTV sun-glare issues..."
+                            class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-slate-700 dark:text-white resize-none"></textarea>
+                    </div>
+                </div>
+            </details>
+          </section>
+
+          <button type="submit" 
+                  class="w-full bg-emerald-500 hover:bg-emerald-600 text-white font-bold py-4 rounded-xl shadow-lg hover:shadow-xl transform hover:-translate-y-0.5 transition-all duration-200 flex justify-center items-center gap-2">
+            <i data-lucide="radar" class="w-5 h-5"></i> Execute Threat Analysis
+          </button>
+        </form>
+      </div>
+    </div>
+
+    <div id="view-loading" class="hidden flex flex-col items-center justify-center min-h-[60vh] text-center p-8 animate-fadeIn">
+      <div class="relative mb-8">
+        <div class="absolute inset-0 bg-emerald-200 rounded-full blur-xl opacity-50 animate-pulse"></div>
+        <i data-lucide="scan-search" class="w-16 h-16 text-emerald-600 animate-spin relative z-10"></i>
+      </div>
+      <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-2">Scanning Intelligence Sources</h2>
+      <p class="text-slate-500 dark:text-slate-400 max-w-md">
+        Analysing crime statistics, social media reports, and calculating Threat Matrix Score...<br>
+        <span class="text-xs mt-2 block">(This usually takes 30-60 seconds)</span>
+      </p>
+      <div class="mt-8 flex flex-col gap-2 w-64">
+        <div class="h-1 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
+          <div class="h-full bg-emerald-500 animate-progress"></div>
+        </div>
+        <div class="flex justify-between text-xs text-slate-400">
+            <span>Gathering Data</span>
+            <span>Generating Report</span>
+        </div>
+      </div>
+    </div>
+
+    <div id="view-result" class="hidden max-w-4xl mx-auto animate-fadeIn">
+      <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl overflow-hidden">
+        <div class="bg-emerald-600 p-4 flex justify-between items-center text-white sticky top-0 z-50 shadow-md no-print">
+          <div class="flex items-center gap-2">
+            <i data-lucide="check-circle" class="w-6 h-6 text-emerald-200"></i>
+            <span class="font-bold">Assessment Complete</span>
+          </div>
+          <div class="flex gap-3">
+             <button onclick="window.print()"
+                   class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
+              <i data-lucide="printer" class="w-4 h-4"></i> Save PDF
+            </button>
+            <button onclick="resetApp()"
+                    class="bg-white text-emerald-700 hover:bg-emerald-50 px-4 py-2 rounded-lg text-sm font-medium transition">
+              New Scan
+            </button>
+          </div>
+        </div>
+        
+        <div class="p-8 md:p-12 bg-slate-50 dark:bg-slate-900 min-h-screen">
+           <div id="report-content" class="prose prose-slate dark:prose-invert max-w-none bg-white dark:bg-slate-800 p-4 md:p-10 shadow-sm border border-slate-200 dark:border-slate-700 rounded-lg"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script>
     // --- CONFIGURATION ---
     const APP_PASSWORD = "SecureHome"; 
-    // YOUR N8N WEBHOOK URL
     const WEBHOOK_URL = "https://dtts.app.n8n.cloud/webhook/generate-report"; 
     // ---------------------
 
-    // Storage for multiple images
-    let storedImages = [];
+    let storedImages = []; // Stores Base64 images
 
     // --- HELPER: GENERATE UNIQUE ID ---
     function generateURN() {
@@ -26,11 +420,10 @@
         }
     };
 
-    // --- MULTI-IMAGE COMPRESSION HELPER ---
+    // --- IMAGE COMPRESSION & STORAGE ---
     const fileInput = document.getElementById('dropzone-file');
     const fileNameDisplay = document.getElementById('file-name');
 
-    // Function to compress a single file
     const processFile = (file) => {
         return new Promise((resolve) => {
             const reader = new FileReader();
@@ -41,21 +434,16 @@
                 img.onload = () => {
                     const canvas = document.createElement('canvas');
                     const ctx = canvas.getContext('2d');
-                    
                     const MAX_WIDTH = 800;
                     let width = img.width;
                     let height = img.height;
-
                     if (width > MAX_WIDTH) {
                         height *= MAX_WIDTH / width;
                         width = MAX_WIDTH;
                     }
-
                     canvas.width = width;
                     canvas.height = height;
                     ctx.drawImage(img, 0, 0, width, height);
-
-                    // Compress to JPEG 70% quality
                     resolve(canvas.toDataURL('image/jpeg', 0.7));
                 };
             };
@@ -65,16 +453,10 @@
     fileInput.addEventListener('change', async (e) => {
         const files = Array.from(e.target.files);
         if (files.length === 0) return;
-
         fileNameDisplay.textContent = `Compressing ${files.length} images...`;
-        
-        // Clear previous images
-        storedImages = [];
-
-        // Process all files in parallel
+        storedImages = []; // Reset storage
         const promises = files.map(file => processFile(file));
         storedImages = await Promise.all(promises);
-
         fileNameDisplay.textContent = `✅ Ready: ${files.length} images loaded`;
         fileNameDisplay.classList.add('text-emerald-500');
     });
@@ -84,7 +466,6 @@
         const borderColorClass = isRisk 
             ? 'border-red-200 dark:border-red-800 hover:border-red-500 bg-red-50 dark:bg-red-900/20' 
             : 'border-slate-200 dark:border-slate-600 hover:border-emerald-500 bg-white dark:bg-slate-700/50';
-        
         const textColorClass = isRisk ? 'text-red-700 dark:text-red-300' : 'text-slate-700 dark:text-slate-300';
         const checkboxColor = isRisk ? 'text-red-500 focus:ring-red-500' : 'text-emerald-500 focus:ring-emerald-500';
 
@@ -102,20 +483,17 @@
         `;
     };
 
-    // --- LIST DATA (Keep your lists object here) ---
-    // [Paste your existing 'const lists = { ... }' object here if needed, 
-    // or keep the previous one if you didn't delete it. I am assuming 
-    // the lists object exists from your previous code] 
+    // --- MERGED & CLEANED DATA LISTS ---
     const lists = {
         merged_physical: [
             {val: "Fencing", lbl: "Fencing"}, {val: "Walls", lbl: "Walls"}, {val: "Gates", lbl: "Gates"},
             {val: "Hedging (Non-thorny)", lbl: "Hedging (Non-thorny)"}, {val: "Hedging (Thorny/Defensive)", lbl: "Hedging (Thorny)"},
             {val: "Secure Postal Delivery System", lbl: "Postal Delivery System"}, {val: "Deterrence Signage", lbl: "Deterrence Signage"},
-            {val: "Egress Preventative Measures", lbl: "Egress Prevention"}, {val: "Security Film", lbl: "Security Film"},
+            {val: "Egress Preventative Measures", lbl: "Egress Prevention (Bollards etc.)"}, {val: "Security Film", lbl: "Security Film"},
             {val: "Window Shutters", lbl: "Window Shutters"}, {val: "Locking Systems", lbl: "Extra Locking Systems"},
             {val: "Intruder Alarm Contacts on Apertures", lbl: "Contacts on Apertures"}, {val: "Security Lighting", lbl: "Security Lighting (PIR/LED)"},
             {val: "CCTV", lbl: "CCTV System"}, {val: "Video Analytics", lbl: "Video Analytics"}, {val: "Guard Dogs", lbl: "Guard Dogs"},
-            {val: "PIDs", lbl: "PIDs"}, {val: "LiDAR", lbl: "LiDAR Sensors"}, {val: "Intruder Alarm Beams", lbl: "Ext. Alarm Beams"},
+            {val: "PIDs", lbl: "Perimeter Intrusion Detection (PIDs)"}, {val: "LiDAR", lbl: "LiDAR Sensors"}, {val: "Intruder Alarm Beams", lbl: "Ext. Alarm Beams"},
         ],
         internal: [
             {val: "Intruder Alarm", lbl: "Intruder Alarm"}, {val: "PIR Sensors", lbl: "PIR Sensors"}, {val: "Internal CCTV", lbl: "Internal CCTV"}, 
@@ -142,13 +520,14 @@
         lucide.createIcons();
     });
 
-    // Theme and Login Logic (Keep existing)
+    // Theme & Login
     const themeToggle = document.getElementById('theme-toggle');
     if (localStorage.getItem('color-theme') === 'dark' || (!('color-theme' in localStorage) && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
       document.documentElement.classList.add('dark');
     } else {
       document.documentElement.classList.remove('dark');
     }
+
     themeToggle.addEventListener('click', () => {
       if (document.documentElement.classList.contains('dark')) {
         document.documentElement.classList.remove('dark');
@@ -187,7 +566,7 @@
       lucide.createIcons();
     }
 
-    // --- SUBMISSION HANDLER (FIXED) ---
+    // --- FORM SUBMISSION ---
     document.getElementById('riskForm').addEventListener('submit', async (e) => {
       e.preventDefault();
       
@@ -235,33 +614,24 @@
 
       const existingMeasuresSummary = `
         REPORT REFERENCE: ${reportURN}
-        
         PROPERTY PROFILE: ${document.getElementById('securityProfile').value}
-
         PHYSICAL SECURITY & PERIMETER: ${physicalFeatures.join(', ') || 'None selected'}
-        
         BUILDING HARDENING SCORES: ${buildingScores}
-        
         INTERNAL SECURITY (DATA): ${internalScores}
         INTERNAL SECURITY PRESENT: ${internalFeatures.join(', ') || 'None selected'}
-
         IDENTIFIED VULNERABILITIES (RISKS): ${riskFeatures.join(', ') || 'None selected'}
-
         OPERATIONAL & ENVIRONMENT: ${opSec}
-
         SITE IMAGE CONTEXT: ${imageDesc}
-
         NOTES: ${formData.get('securityNotes').trim()}
       `;
 
-      // 1. Send 'site_images' as an ARRAY of strings
       const payload = {
         unique_id: reportURN,
         address: formData.get('address'),
         email: formData.get('clientEmail'),
         details: formData.get('propertyDetails'),
         security_profile: document.getElementById('securityProfile').value,
-        site_images: storedImages, // <--- SENDING THE ARRAY HERE
+        site_images: storedImages, 
         existing_measures: existingMeasuresSummary
       };
 
@@ -272,33 +642,25 @@
           body: JSON.stringify(payload)
         });
 
-        // 2. SMART RESPONSE HANDLING (The Fix for Network Error)
-        // We check the "Content-Type" header to see if n8n sent HTML or JSON.
+        // SAFETY CHECK: Handle HTML vs JSON response
         const contentType = res.headers.get("content-type");
         let htmlContent = "";
 
-        if (contentType && contentType.indexOf("application/json") !== -1) {
-            // It is JSON
+        if (contentType && contentType.includes("application/json")) {
             const result = await res.json();
             htmlContent = result.html || result.output || "<p>Report generated successfully.</p>";
         } else {
-            // It is HTML (Text)
+            // It is HTML text
             htmlContent = await res.text();
         }
 
         if (res.ok) {
-            // If the content is basically empty JSON, handle fallback
-            if (htmlContent.includes("Report generated successfully") && htmlContent.length < 100) {
-               // This handles the "Success but no content" case
-            }
-
           const headerHTML = `
             <div class="mb-6 border-b border-slate-200 dark:border-slate-700 pb-4">
                 <span class="text-xs font-bold bg-slate-100 dark:bg-slate-700 text-slate-500 dark:text-slate-300 px-2 py-1 rounded">REF: ${reportURN}</span>
                 <span class="text-xs text-slate-400 ml-2">${new Date().toLocaleDateString()}</span>
             </div>
           `;
-          
           document.getElementById('report-content').innerHTML = headerHTML + htmlContent;
           switchView('result');
         } else {
@@ -306,8 +668,8 @@
           switchView('form');
         }
       } catch (err) {
-        console.error("Submission Error:", err);
-        alert("Network error. Check console for details: " + err.message);
+        console.error(err);
+        alert("Network error. Check console for details.");
         switchView('form');
       }
     });
@@ -322,8 +684,11 @@
       document.getElementById('riskForm').reset();
       document.querySelectorAll('input[type="checkbox"]').forEach(cb => cb.checked = false);
       document.querySelectorAll('.detail-box').forEach(box => box.classList.add('hidden'));
-      storedImages = []; // Clear images
-      document.getElementById('file-name').textContent = "JPG/PNG (Auto-Compressed)";
+      storedImages = [];
+      fileNameDisplay.textContent = "JPG/PNG (Auto-Compressed)";
+      fileNameDisplay.classList.remove('text-emerald-500');
       switchView('form');
     };
   </script>
+</body>
+</html>
