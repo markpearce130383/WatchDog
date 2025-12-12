@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Security Assessment Tracker</title>
+  <title>SecureCore Assessment</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -88,7 +88,7 @@
         <div class="bg-slate-900 dark:bg-black p-6 text-white">
           <div class="flex items-center gap-3 mb-2">
             <i data-lucide="map-pin" class="w-8 h-8 text-emerald-400"></i>
-            <h1 class="text-2xl font-bold">Security Assessment Tracker</h1>
+            <h1 class="text-2xl font-bold">SecureCore</h1>
           </div>
           <p class="text-slate-400">Generate Threat Matrix & Vulnerability Assessments.</p>
         </div>
@@ -488,20 +488,17 @@
     // --- MERGED & CLEANED DATA LISTS ---
     const lists = {
         merged_physical: [
-            // UPDATED with specific placeholders and renames
             {val: "Fencing", lbl: "Fencing", placeholder: "Height, material, and condition"}, 
             {val: "Perimeter Walls", lbl: "Perimeter Walls", placeholder: "Height and condition"}, 
             {val: "Gates", lbl: "Gates", placeholder: "Pedestrian or Vehicular"},
-            {val: "Hedging", lbl: "Hedging", placeholder: "Thorny or not thorny"}, // Consolidated
-            
-            // REMOVED: Secure Postal Delivery System
+            {val: "Hedging", lbl: "Hedging", placeholder: "Thorny or not thorny"},
             
             {val: "Deterrence Signage", lbl: "Deterrence Signage"},
-            {val: "Bollards and Barriers", lbl: "Bollards and barriers"}, // Renamed from Egress Preventative Measures
+            {val: "Bollards and Barriers", lbl: "Bollards and Barriers"},
             {val: "Security Film", lbl: "Security Film"},
             {val: "Window Shutters", lbl: "Window Shutters"}, 
             {val: "Locking Systems", lbl: "Extra Locking Systems"},
-            {val: "Alarm Contacts on Apertures", lbl: "Alarm Contacts on Apertures"}, // Renamed
+            {val: "Alarm Contacts on Apertures", lbl: "Alarm Contacts on Apertures"},
             {val: "Security Lighting", lbl: "Security Lighting (PIR/LED)"},
             {val: "CCTV", lbl: "CCTV System"}, 
             {val: "Video Analytics", lbl: "Video Analytics"}, 
@@ -511,16 +508,27 @@
             {val: "Intruder Alarm Beams", lbl: "Ext. Alarm Beams"},
         ],
         internal: [
-            {val: "Intruder Alarm", lbl: "Intruder Alarm"}, {val: "PIR Sensors", lbl: "PIR Sensors"}, {val: "Internal CCTV", lbl: "Internal CCTV"}, 
-            {val: "Monitoring", lbl: "Monitoring"}, {val: "Police Response", lbl: "Police Response"}, {val: "Security Patrols", lbl: "Security Patrols"},
-            {val: "Key Fobs", lbl: "Key Fobs Used"}, {val: "All Fobs Accounted For", lbl: "Fobs Accounted For"}, {val: "Panic Alarms", lbl: "Panic Alarms"},
-            {val: "Safe", lbl: "Safe"}, {val: "Quality/Graded Safe", lbl: "Quality/Graded Safe"}, {val: "Safe Alarmed", lbl: "Safe Alarmed"},
-            {val: "Dummy Safe", lbl: "Dummy Safe"}, {val: "Panic Room/Secure Space", lbl: "Panic Room/Space"}, {val: "Comms in Secure Space", lbl: "Comms in Space"},
-            {val: "Smoke Cloaks", lbl: "Smoke Cloaks"}, {val: "Strobe Lighting", lbl: "Strobe Lighting"}, {val: "High Value Items in Safe", lbl: "Items in Safe"},
+            {val: "Intruder Alarm", lbl: "Intruder Alarm"}, 
+            // Moved Key Fobs here
+            {val: "Key Fobs", lbl: "Key Fobs Used"}, 
+            {val: "All Fobs Accounted For", lbl: "Fobs Accounted For"},
+            
+            {val: "PIR Sensors", lbl: "PIR Sensors"}, 
+            {val: "Internal CCTV", lbl: "Internal CCTV"}, 
+            {val: "Monitoring", lbl: "Monitoring", placeholder: "Self monitored via mobile device/recorded locally/remote monitoring"}, 
+            {val: "Police Response", lbl: "Police Response"}, 
+            {val: "Security Patrols", lbl: "Security Patrols"},
+            {val: "Panic Alarms", lbl: "Panic Alarms"},
+            
+            // Simplified Safe options
+            {val: "Safe", lbl: "Safe", placeholder: "Alarmed?"}, 
+            
+            {val: "Panic Room/Secure Space", lbl: "Panic Room/Space"}, 
+            {val: "Smoke Cloaks", lbl: "Smoke Cloaks"}, 
+            {val: "Strobe Lighting", lbl: "Strobe Lighting"}, 
         ],
         risks: [
-            {val: "External Surveillance Positions Possible", lbl: "External Surveillance Holes", risk: true},
-            {val: "Internal Surveillance Positions", lbl: "Internal Surveillance Positions", risk: true},
+            // Removed Surveillance options
             {val: "Accessible Outbuildings/Sheds", lbl: "Accessible Outbuildings/Sheds", risk: true},
             {val: "Keys Hidden Outside", lbl: "Keys Hidden Outside", risk: true},
             {val: "Potential for Climbing", lbl: "Potential for Climbing", risk: true},
@@ -529,9 +537,8 @@
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-        // Updated map function to pass the placeholder
         document.getElementById('merged_physical_grid').innerHTML = lists.merged_physical.map(i => renderCheckbox('merged_physical_feature', i.val, i.lbl, i.risk, i.placeholder)).join('');
-        document.getElementById('internal_grid').innerHTML = lists.internal.map(i => renderCheckbox('internal_feature', i.val, i.lbl, i.risk)).join('');
+        document.getElementById('internal_grid').innerHTML = lists.internal.map(i => renderCheckbox('internal_feature', i.val, i.lbl, i.risk, i.placeholder)).join('');
         document.getElementById('risk_grid').innerHTML = lists.risks.map(i => renderCheckbox('risk_feature', i.val, i.lbl, i.risk)).join('');
         lucide.createIcons();
     });
