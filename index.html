@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Residential Crime Tracker</title>
+  <title>Security Assessment Tracker</title>
   
   <script src="https://cdn.tailwindcss.com"></script>
   <script>
@@ -88,7 +88,7 @@
         <div class="bg-slate-900 dark:bg-black p-6 text-white">
           <div class="flex items-center gap-3 mb-2">
             <i data-lucide="map-pin" class="w-8 h-8 text-emerald-400"></i>
-            <h1 class="text-2xl font-bold">Residential Crime Tracker</h1>
+            <h1 class="text-2xl font-bold">Security Assessment Tracker</h1>
           </div>
           <p class="text-slate-400">Generate Threat Matrix & Vulnerability Assessments.</p>
         </div>
@@ -110,6 +110,7 @@
                         <option value="Elevated Residential">Elevated Residential (Large Detached / HNW)</option>
                         <option value="High Risk">High Risk (UHNW / Estate / Specific Threat)</option>
                         <option value="Rural Farm">Working Farm / Rural Smallholding</option>
+                        <option value="Commercial/Industrial">Commercial/Industrial Premises</option>
                     </select>
                 </div>
 
@@ -167,7 +168,7 @@
                 </p>
                 <textarea name="propertyDetails" rows="4" required 
                     class="w-full p-3 border border-slate-300 dark:border-slate-600 rounded-lg focus:ring-2 focus:ring-emerald-500 outline-none bg-white dark:bg-slate-800 dark:text-white resize-y"
-                    placeholder="e.g. Weekend retreat with heavy foot traffic. Grade II listed building. 3 on-site staff..."></textarea>
+                    placeholder="Your greatest concern or vulnerability"></textarea>
             </div>
           </details>
 
@@ -376,11 +377,11 @@
             <span class="font-bold">Assessment Complete</span>
           </div>
           <div class="flex gap-3">
-             <button onclick="window.print()"
+             <button onclick="window.print()" 
                    class="bg-white/10 hover:bg-white/20 text-white px-4 py-2 rounded-lg text-sm font-medium transition flex items-center gap-2">
               <i data-lucide="printer" class="w-4 h-4"></i> Save PDF
             </button>
-            <button onclick="resetApp()"
+            <button onclick="resetApp()" 
                     class="bg-white text-emerald-700 hover:bg-emerald-50 px-4 py-2 rounded-lg text-sm font-medium transition">
               New Scan
             </button>
@@ -462,7 +463,8 @@
     });
 
     // --- DYNAMIC CHECKBOX GENERATOR ---
-    const renderCheckbox = (name, value, label, isRisk = false) => {
+    // Updated to accept a custom placeholder
+    const renderCheckbox = (name, value, label, isRisk = false, placeholder = "Add specific details...") => {
         const borderColorClass = isRisk 
             ? 'border-red-200 dark:border-red-800 hover:border-red-500 bg-red-50 dark:bg-red-900/20' 
             : 'border-slate-200 dark:border-slate-600 hover:border-emerald-500 bg-white dark:bg-slate-700/50';
@@ -476,7 +478,7 @@
                 <span class="text-sm ${textColorClass} font-medium flex-1">${label}</span>
             </label>
             <div class="detail-box hidden pt-3 animate-fadeIn">
-                <input type="text" placeholder="Add specific details..." 
+                <input type="text" placeholder="${placeholder}" 
                        class="detail-input w-full p-2 text-xs border-b border-slate-300 dark:border-slate-500 bg-transparent focus:border-emerald-500 outline-none ${textColorClass} placeholder-slate-400">
             </div>
         </div>
@@ -486,14 +488,27 @@
     // --- MERGED & CLEANED DATA LISTS ---
     const lists = {
         merged_physical: [
-            {val: "Fencing", lbl: "Fencing"}, {val: "Walls", lbl: "Walls"}, {val: "Gates", lbl: "Gates"},
-            {val: "Hedging (Non-thorny)", lbl: "Hedging (Non-thorny)"}, {val: "Hedging (Thorny/Defensive)", lbl: "Hedging (Thorny)"},
-            {val: "Secure Postal Delivery System", lbl: "Postal Delivery System"}, {val: "Deterrence Signage", lbl: "Deterrence Signage"},
-            {val: "Egress Preventative Measures", lbl: "Egress Prevention (Bollards etc.)"}, {val: "Security Film", lbl: "Security Film"},
-            {val: "Window Shutters", lbl: "Window Shutters"}, {val: "Locking Systems", lbl: "Extra Locking Systems"},
-            {val: "Intruder Alarm Contacts on Apertures", lbl: "Contacts on Apertures"}, {val: "Security Lighting", lbl: "Security Lighting (PIR/LED)"},
-            {val: "CCTV", lbl: "CCTV System"}, {val: "Video Analytics", lbl: "Video Analytics"}, {val: "Guard Dogs", lbl: "Guard Dogs"},
-            {val: "PIDs", lbl: "Perimeter Intrusion Detection (PIDs)"}, {val: "LiDAR", lbl: "LiDAR Sensors"}, {val: "Intruder Alarm Beams", lbl: "Ext. Alarm Beams"},
+            // UPDATED with specific placeholders and renames
+            {val: "Fencing", lbl: "Fencing", placeholder: "Height, material, and condition"}, 
+            {val: "Perimeter Walls", lbl: "Perimeter Walls", placeholder: "Height and condition"}, 
+            {val: "Gates", lbl: "Gates", placeholder: "Pedestrian or Vehicular"},
+            {val: "Hedging", lbl: "Hedging", placeholder: "Thorny or not thorny"}, // Consolidated
+            
+            // REMOVED: Secure Postal Delivery System
+            
+            {val: "Deterrence Signage", lbl: "Deterrence Signage"},
+            {val: "Bollards and Barriers", lbl: "Bollards and barriers"}, // Renamed from Egress Preventative Measures
+            {val: "Security Film", lbl: "Security Film"},
+            {val: "Window Shutters", lbl: "Window Shutters"}, 
+            {val: "Locking Systems", lbl: "Extra Locking Systems"},
+            {val: "Alarm Contacts on Apertures", lbl: "Alarm Contacts on Apertures"}, // Renamed
+            {val: "Security Lighting", lbl: "Security Lighting (PIR/LED)"},
+            {val: "CCTV", lbl: "CCTV System"}, 
+            {val: "Video Analytics", lbl: "Video Analytics"}, 
+            {val: "Guard Dogs", lbl: "Guard Dogs"},
+            {val: "PIDs", lbl: "Perimeter Intrusion Detection (PIDs)"}, 
+            {val: "LiDAR", lbl: "LiDAR Sensors"}, 
+            {val: "Intruder Alarm Beams", lbl: "Ext. Alarm Beams"},
         ],
         internal: [
             {val: "Intruder Alarm", lbl: "Intruder Alarm"}, {val: "PIR Sensors", lbl: "PIR Sensors"}, {val: "Internal CCTV", lbl: "Internal CCTV"}, 
@@ -514,7 +529,8 @@
     };
 
     document.addEventListener('DOMContentLoaded', () => {
-        document.getElementById('merged_physical_grid').innerHTML = lists.merged_physical.map(i => renderCheckbox('merged_physical_feature', i.val, i.lbl, i.risk)).join('');
+        // Updated map function to pass the placeholder
+        document.getElementById('merged_physical_grid').innerHTML = lists.merged_physical.map(i => renderCheckbox('merged_physical_feature', i.val, i.lbl, i.risk, i.placeholder)).join('');
         document.getElementById('internal_grid').innerHTML = lists.internal.map(i => renderCheckbox('internal_feature', i.val, i.lbl, i.risk)).join('');
         document.getElementById('risk_grid').innerHTML = lists.risks.map(i => renderCheckbox('risk_feature', i.val, i.lbl, i.risk)).join('');
         lucide.createIcons();
