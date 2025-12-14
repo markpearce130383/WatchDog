@@ -351,12 +351,15 @@
     <div id="view-loading" class="hidden flex flex-col items-center justify-center min-h-[60vh] text-center p-8 animate-fadeIn">
       <div class="relative mb-8">
         <div class="absolute inset-0 bg-emerald-200 rounded-full blur-xl opacity-50 animate-pulse"></div>
-        <i data-lucide="scan-search" class="w-16 h-16 text-emerald-600 animate-spin relative z-10"></i>
+        <i data-lucide="lock" class="w-16 h-16 text-emerald-600 animate-spin relative z-10"></i>
       </div>
       <h2 class="text-2xl font-bold text-slate-800 dark:text-white mb-2">Scanning Intelligence Sources</h2>
       <p class="text-slate-500 dark:text-slate-400 max-w-md">
-        Analysing crime statistics, social media reports, and calculating Threat Matrix Score...<br>
-        <span class="text-xs mt-2 block">(This usually takes 30-60 seconds)</span>
+        Please give us a moment, we're working hard to provide you with the most up to date data and guidance.
+        <br>
+        <span class="text-xs mt-2 block font-medium text-emerald-600 dark:text-emerald-400">
+            (Analysis typically takes 30-60 seconds)
+        </span>
       </p>
       <div class="mt-8 flex flex-col gap-2 w-64">
         <div class="h-1 w-full bg-slate-200 dark:bg-slate-700 rounded-full overflow-hidden">
@@ -368,7 +371,6 @@
         </div>
       </div>
     </div>
-
     <div id="view-result" class="hidden max-w-4xl mx-auto animate-fadeIn">
       <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl overflow-hidden">
         <div class="bg-emerald-600 p-4 flex justify-between items-center text-white sticky top-0 z-50 shadow-md no-print">
