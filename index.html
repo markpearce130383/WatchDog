@@ -203,31 +203,31 @@
                                 <div>
                                     <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Door Locks</label>
                                     <select id="doorScore" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
-                                        <option value="1">1 (Poor)</option>
-                                        <option value="2">2 (Weak)</option>
-                                        <option value="3">3 (Average)</option>
-                                        <option value="4">4 (Good)</option>
-                                        <option value="5">5 (Excellent)</option>
+                                        <option value="1">1 - Standard/Old Key (Low)</option>
+                                        <option value="2">2 - Standard Euro Cylinder</option>
+                                        <option value="3">3 - British Standard (BS3621)</option>
+                                        <option value="4">4 - High Security (3-Star Anti-Snap)</option>
+                                        <option value="5">5 - Smart Lock / Multi-point Steel</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Wall Construction</label>
                                     <select id="wallScore" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
-                                        <option value="1">1 (Poor)</option>
-                                        <option value="2">2 (Weak)</option>
-                                        <option value="3">3 (Average)</option>
-                                        <option value="4">4 (Good)</option>
-                                        <option value="5">5 (Excellent)</option>
+                                        <option value="1">1 - Timber / Prefab (Weak)</option>
+                                        <option value="2">2 - Single Brick Skin (Garage)</option>
+                                        <option value="3">3 - Standard Cavity Wall (Residential)</option>
+                                        <option value="4">4 - Solid Stone / Concrete</option>
+                                        <option value="5">5 - Reinforced / Security Rated</option>
                                     </select>
                                 </div>
                                 <div>
                                     <label class="block text-xs font-bold text-slate-500 dark:text-slate-400 mb-1">Glazing Quality</label>
                                     <select id="glazingScore" class="w-full p-2 border border-slate-300 dark:border-slate-600 rounded-lg bg-white dark:bg-slate-700 dark:text-white text-sm">
-                                        <option value="1">1 (Poor)</option>
-                                        <option value="2">2 (Weak)</option>
-                                        <option value="3">3 (Average)</option>
-                                        <option value="4">4 (Good)</option>
-                                        <option value="5">5 (Excellent)</option>
+                                        <option value="1">1 - Single Glazed (High Risk)</option>
+                                        <option value="2">2 - Old Double Glazing (Standard)</option>
+                                        <option value="3">3 - Modern Toughened Double Glazing</option>
+                                        <option value="4">4 - Laminated / Security Glass (P4A+)</option>
+                                        <option value="5">5 - Bullet/Blast Resistant</option>
                                     </select>
                                 </div>
                             </div>
@@ -371,6 +371,7 @@
         </div>
       </div>
     </div>
+
     <div id="view-result" class="hidden max-w-4xl mx-auto animate-fadeIn">
       <div class="bg-white dark:bg-slate-800 rounded-xl shadow-2xl overflow-hidden">
         <div class="bg-emerald-600 p-4 flex justify-between items-center text-white sticky top-0 z-50 shadow-md no-print">
@@ -465,7 +466,6 @@
     });
 
     // --- DYNAMIC CHECKBOX GENERATOR ---
-    // Updated to accept a custom placeholder
     const renderCheckbox = (name, value, label, isRisk = false, placeholder = "Add specific details...") => {
         const borderColorClass = isRisk 
             ? 'border-red-200 dark:border-red-800 hover:border-red-500 bg-red-50 dark:bg-red-900/20' 
@@ -490,6 +490,9 @@
     // --- MERGED & CLEANED DATA LISTS ---
     const lists = {
         merged_physical: [
+            // ADDED VIDEO DOORBELL HERE
+            {val: "Video Doorbell", lbl: "Video Doorbell", placeholder: "Brand/Model (Ring/Nest/Unifi)"},
+
             {val: "Fencing", lbl: "Fencing", placeholder: "Height, material, and condition"}, 
             {val: "Perimeter Walls", lbl: "Perimeter Walls", placeholder: "Height and condition"}, 
             {val: "Gates", lbl: "Gates", placeholder: "Pedestrian or Vehicular"},
@@ -511,7 +514,6 @@
         ],
         internal: [
             {val: "Intruder Alarm", lbl: "Intruder Alarm"}, 
-            // Moved Key Fobs here
             {val: "Key Fobs", lbl: "Key Fobs Used"}, 
             {val: "All Fobs Accounted For", lbl: "Fobs Accounted For"},
             
@@ -522,7 +524,6 @@
             {val: "Security Patrols", lbl: "Security Patrols"},
             {val: "Panic Alarms", lbl: "Panic Alarms"},
             
-            // Simplified Safe options
             {val: "Safe", lbl: "Safe", placeholder: "Alarmed?"}, 
             
             {val: "Panic Room/Secure Space", lbl: "Panic Room/Space"}, 
@@ -530,7 +531,6 @@
             {val: "Strobe Lighting", lbl: "Strobe Lighting"}, 
         ],
         risks: [
-            // Removed Surveillance options
             {val: "Accessible Outbuildings/Sheds", lbl: "Accessible Outbuildings/Sheds", risk: true},
             {val: "Keys Hidden Outside", lbl: "Keys Hidden Outside", risk: true},
             {val: "Potential for Climbing", lbl: "Potential for Climbing", risk: true},
@@ -667,7 +667,6 @@
           body: JSON.stringify(payload)
         });
 
-        // SAFETY CHECK: Handle HTML vs JSON response
         const contentType = res.headers.get("content-type");
         let htmlContent = "";
 
@@ -675,7 +674,6 @@
             const result = await res.json();
             htmlContent = result.html || result.output || "<p>Report generated successfully.</p>";
         } else {
-            // It is HTML text
             htmlContent = await res.text();
         }
 
